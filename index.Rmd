@@ -17,43 +17,26 @@ library(spotifyr)
 ```
 
 ```{r}
+library(tidyverse)
+library(spotifyr)
+
 old <- get_playlist_audio_features("", "6oeRMX8XZ8IS7MCDb6Z1BG")
 new <- get_playlist_audio_features("", "4k98rVhcCw54dhLaUMiyLK")
+experimental <- get_playlist_audio_features("", "1EIpRI9TozVUiehlxAmmHq")
 
 oldvsnew <-
   bind_rows(
     old %>% mutate(category = "Old music"),
-    new %>% mutate(category = "New music")
+    new %>% mutate(category = "New music"),
+    experimental %>% mutate(category = "Experimental")
   )
 
-
-ggplot(oldvsnew, aes(valence, energy, color = category, size = speechiness)) + 
-  geom_point(alpha = 0.5) + 
-  theme(legend.position = "none") +
-  geom_label(
-    aes(label = "Old music"),
-    x = 0.1, y = 0.68,
-    label.padding = unit(0.3, "lines"),
-    label.size = 0.4,
-    color = "black",
-    fill = "lightblue"
-  )+
-  geom_label(
-    aes(label = "New music"),
-    x = 0.6, y = 0.99,
-    label.padding = unit(0.3, "lines"),
-    label.size = 0.4,
-    color = "black",
-    fill = "pink"
-  )+
-  labs(title = "Bring Me The Horizon's old vs. new music")
-
+ggplot(oldvsnew, 
+       aes(x = valence, y = energy, color = speechiness, size = danceability)) +
+  geom_jitter(alpha = 0.5) +
+  facet_wrap(~category) +
+  scale_color_gradient(low = "black", high = "purple")
 ```
 
 # Bring Me The Horizon's old vs. new music
 
-For this data I compared the older music of BMTH to their newer music. For their old music I simply took their first two albums *Count Your Blessings* (2006) and *Suicide Season* (2008) and for the new music I took their most recent release, the EP *POST HUMAN: SURVIVAL HORROR* (2020) and their most recent album *amo* (2019). The reason that I did not simply use their two most recent releases for the "new music" category, is that I do not think that it would be relevant. If I would use their second or third most recent work instead of *amo*, I would be using a live album (*Live at the Royal Albert Hall* (2020)) or an album that was more of an experiment and not necessarily a representation of their music style (*Music to listen to~* (2019)), although that would also be an interesting thing to look at.
-
-Looking at the plot that I have made with the data, you can easily see that the overall mood of their old vs. new music is significantly different. Taking into account that high energy and low valence means 'angry music' and high valence and high energy means 'happy music', you could conclude that their new music is overall much happier than their old music, which isn't happy at all. 
-
-**(((to be continued)))**
