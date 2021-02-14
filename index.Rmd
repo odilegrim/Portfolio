@@ -46,13 +46,38 @@ ggplot(oldvsnew,
   theme(axis.title = element_text(family = "Times New Roman",
                                   size = 12)) +
   xlab("Valence") + ylab("Energy") +
-  theme(strip.text.x =  element_text(family = "Times New Roman"))
+  theme(strip.text.x =  element_text(family = "Times New Roman")) +
+    geom_text(
+    aes(x = valence, y = energy, label = label),
+  data = tibble(label = c("A Devastating Liberation", 
+                          "i apologise if 
+                          you feel something",
+                          "Memorial"), 
+                category = c("Experimental", "New music", "Old music"), 
+                valence = c(0.3, 0.2, 0.15),
+                energy = c(0.17, 0.295, 0.085)),
+  color = "darkred",
+  size = 3,
+  family = "Times New Roman"
+  ) +
+  geom_text(
+    aes(x = valence, y = energy, label = label),
+    data = tibble(label = c("Danceable", "Not danceable" ),
+                  category = c("New music", "New music"),
+                  valence = c(0.43, 0.47),
+                  energy = c(0.55, 0.47)),
+    color = "grey30",
+    size = 2.8,
+    family = "Times New Roman"
+  ) +
+  guides(size = FALSE)
+
   
 ```
 
 # Bring Me The Horizon: different music styles
 
-For this plot I have split Bring Me The Horizon's music into three different categories, "Old Music" containing their first four albums (*Count Your Blessings*, *Suicide Season*, *There is a Hell Believe Me I've Seen It. There is a Heaven Let's Keep it a Secret* and *Sempiternal (Expanded Edition)*), "New music" containing their three most recent releases (*That's The Spirit*, *amo* and *POST HUMAN: SURVIVAL HORROR*) with exception of their experimental music from *Music to listen to~*, which is the third category. The reason I separated this work from the two main categories, is that it isn't exactly representative of either their "new" or "old" music style.
-  Looking at the plot, it is easily visible that Bring Me The Horizon's new music is much more varied than their old music. Considering that music with a high energy and low valence is is seen as angry, and high energy combined with high valence as happy, we could conclude that their new music is overall much happier than their old music. The valence is generally higher and the energy overall a bit lower. When looking at the experimental music, we can see that it has very low valence values and most of it leans more toward the angry side, like BMTH's old music. It also overlaps in a category of lower-energy-and-valence-scores with their new music, those scores would mean that the music is more sad. Speaking of that, each category in this plot seems to have outliers in the 'sad' category. For the old music, the track *Memorial* seems to be extremely sad, *A Devastating Liberation* seems to be the saddest song from the experimental music and *i apologise if you feel something* would be the saddest song from their new music. 
+For this plot I have split Bring Me The Horizon's music into three different categories, "Old Music" containing their first four albums (*Count Your Blessings*, *Suicide Season*, *There is a Hell Believe Me I've Seen It. There is a Heaven Let's Keep it a Secret* and *Sempiternal (Expanded Edition)*), "New music" containing their three most recent releases (*That's The Spirit*, *amo* and *POST HUMAN: SURVIVAL HORROR*) with exception of their experimental music from *Music to listen to~*, which is the third category. The reason I separated this work from the two main categories, is that it isn't exactly representative of either their "new" or "old" music style (hence "Experimental").
+  Looking at the plot, it is easily visible that Bring Me The Horizon's new music is much more varied than their old music. Considering that music with a high energy and low valence is is seen as angry, and high energy combined with high valence as happy, we could conclude that their new music is overall much happier than their old music. However, the valence scores are on the lower side for all of their music (<0.5), so you probably wouldn't say it was happy in itself, just happier than their old music. When looking at the experimental music, we can see that it has very low valence values, like BMTH's old music, and could also be considered more angry and negative. It also overlaps in a small category of lower-energy-and-valence-scores with both their new and old music, which scores would mean that the music is more sad. Speaking of sad music, each category in this plot seems to have outliers that fall into the 'sad music' area, they are labeled in the plot.
   
-  The danceability is indicated by size and it is immediately visible that especially the sad songs are less "danceable" than the rest of them. Happier songs, mainly their new music, seem to be the most "danceable", but most of the music from *Music to listen to~* also seems to be quite danceable. Considering the fact that this album was released in 2019 and is also quite new, we could pose the question whether BMTH's style has changed to a more danceable one. The speechiness, indicated by the colour, generally seems to be higher with higher numbers in valence, but also deffinitely has some outliers. Generally their music doesn't seem to be very speechy. Looking at all their work together, BMTH seems to make very energetic music, with most of their songs having an energy score above 0.75 (maximum score is 1). Their music seems to have progressed from negative and angry towards a more diverse positive and happy style, with almost a kind of "dip" back towards negativity in their experimental album. 
+  The danceability, indicated by size, makes it visible that especially the very sad outliers are less "danceable" than the rest of them. Happier songs, mainly their new music, seem to be the most "danceable", but most of the music from *Music to listen to~* also seems to be more danceable. With the highest danceability score being 0.6 out of a possible maximum of 1, however, most of their music could not be considered as very danceable. The speechiness, indicated by colour, generally seems to be higher with higher numbers in valence, but also deffinitely has some outliers. Generally their music doesn't seem to be very speechy or to have an especially clear pattern in it in combination with the other factors shown here. Looking at all their work together, BMTH seems to make very energetic music, with most of their songs having an energy score above 0.75 out of 1. Their music seems to have progressed from negative and angry towards a more diverse and positive style, with almost a kind of "dip" back towards negativity in their experimental album. 
