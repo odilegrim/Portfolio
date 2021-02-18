@@ -2,15 +2,17 @@
 title: "Portfolio Computational Musicology"
 author: "Odile Grim"
 date: "2021"
-output: html_document
+output: 
+  flexdashboard::flex_dashboard:
+    storyboard: true
 ---
 
-# Portfolio
+### Corpus intdocution
 
 For my corpus I would like to look at the repertoire of Bring Me The Horizon. Since the release of their first four albums, which can, according to Google, all be classified as "metalcore", their music has progressed more towards alternative-/pop-/electronic-rock and they even released an [EP with experimental and electronic music](https://open.spotify.com/album/6yC6aLzX5knhWpKDidwxft). Having been in their fanbase since around 2013, when *Sempiternal* was released, I myself experienced the changes in their music. Some people argue that only their "old" music is good and their new music is "too soft", leading to them not listening to the band's music anymore. My question is, what exactly has changed about their music, which aspects have remained similar to their early music and which haven't? Also, how has this affected their listeners/ fanbase? Did the demographics change? I definitely think that BMTH's music after 2013 has changed significantly compared to their earlier music and it will be most interesting to dive deeper into their work from that time on. As for specific tracks to look at *Pray for Plagues*, *Chelsea Smile* and *Shadow Moses* from their earlier work and *Drown*, *Mantra* and *Ludens* from their more recent work might be representative tracks, as they were all released as singles and thus viewed as important. Some of their more recent albums include different genres within them, so it might also be useful to examine those more closely and determine what and how big those differences are and whether they are significant.
 
 
-## Homework week 6
+### Bring Me The Horizon: different music styles compared
 
 ```{r}
 library(tidyverse)
@@ -75,7 +77,7 @@ ggplot(oldvsnew,
   
 ```
 
-# Bring Me The Horizon: different music styles
+*** Bring Me The Horizon: different music styles
 
 For this plot I have split Bring Me The Horizon's music into three different categories, "Old Music" containing their first four albums (*Count Your Blessings*, *Suicide Season*, *There is a Hell Believe Me I've Seen It. There is a Heaven Let's Keep it a Secret* and *Sempiternal (Expanded Edition)*), "New music" containing their three most recent releases (*That's The Spirit*, *amo* and *POST HUMAN: SURVIVAL HORROR*) with exception of their experimental music from *Music to listen to~*, which is the third category. The reason I separated this work from the two main categories, is that it isn't exactly representative of either their "new" or "old" music style (hence "Experimental").
   Looking at the plot, it is easily visible that Bring Me The Horizon's new music is much more varied than their old music. Considering that music with a high energy and low valence is is seen as angry, and high energy combined with high valence as happy, we could conclude that their new music is overall much happier than their old music. However, the valence scores are on the lower side for all of their music (<0.5), so you probably wouldn't say it was happy in itself, just happier than their old music. When looking at the experimental music, we can see that it has very low valence values, like BMTH's old music, and could also be considered more angry and negative. It also overlaps in a small category of lower-energy-and-valence-scores with both their new and old music, which scores would mean that the music is more sad. Speaking of sad music, each category in this plot seems to have outliers that fall into the 'sad music' area, they are labeled in the plot.
