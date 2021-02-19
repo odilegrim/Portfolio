@@ -6,6 +6,9 @@ output:
   flexdashboard::flex_dashboard:
     storyboard: true
 ---
+```{r}
+library(plotly)
+```
 
 ### Corpus intdocution
 
@@ -29,7 +32,7 @@ oldvsnew <-
     experimental %>% mutate(category = "Experimental")
   )
 
-ggplot(oldvsnew, 
+differentstyles <- ggplot(oldvsnew, 
        aes(x = valence, y = energy, color = speechiness, size = danceability)) +
   geom_jitter(alpha = 0.5) +
   facet_wrap(~category) +
@@ -71,15 +74,50 @@ ggplot(oldvsnew,
     color = "grey30",
     size = 2.8,
     family = "Times New Roman"
-  ) +
-  guides(size = FALSE)
+  ) 
 
+ggplotly(differentstyles)
   
 ```
 
 *** 
 
-For this plot I have split Bring Me The Horizon's music into three different categories, "Old Music" containing their first four albums (*Count Your Blessings*, *Suicide Season*, *There is a Hell Believe Me I've Seen It. There is a Heaven Let's Keep it a Secret* and *Sempiternal (Expanded Edition)*), "New music" containing their three most recent releases (*That's The Spirit*, *amo* and *POST HUMAN: SURVIVAL HORROR*) with exception of their experimental music from *Music to listen to~*, which is the third category. The reason I separated this work from the two main categories, is that it isn't exactly representative of either their "new" or "old" music style (hence "Experimental").
+For this plot I have split Bring Me The Horizon's music into three different categories, "Old Music" containing their first four albums , "New music" containing their three most recent releases with exception of their experimental music from *Music to listen to~*, which is the third category. The reason I separated this work from the two main categories, is that it isn't exactly representative of either their "new" or "old" music style (hence "Experimental").
   Looking at the plot, it is easily visible that Bring Me The Horizon's new music is much more varied than their old music. Considering that music with a high energy and low valence is is seen as angry, and high energy combined with high valence as happy, we could conclude that their new music is overall much happier than their old music. However, the valence scores are on the lower side for all of their music (<0.5), so you probably wouldn't say it was happy in itself, just happier than their old music. When looking at the experimental music, we can see that it has very low valence values, like BMTH's old music, and could also be considered more angry and negative. It also overlaps in a small category of lower-energy-and-valence-scores with both their new and old music, which scores would mean that the music is more sad. Speaking of sad music, each category in this plot seems to have outliers that fall into the 'sad music' area, they are labeled in the plot.
   
   The danceability, indicated by size, makes it visible that especially the very sad outliers are less "danceable" than the rest of them. Happier songs, mainly their new music, seem to be the most "danceable", but most of the music from *Music to listen to~* also seems to be more danceable. With the highest danceability score being 0.6 out of a possible maximum of 1, however, most of their music could not be considered as very danceable. The speechiness, indicated by colour, generally seems to be higher with higher numbers in valence, but also deffinitely has some outliers. Generally their music doesn't seem to be very speechy or to have an especially clear pattern in it in combination with the other factors shown here. Looking at all their work together, BMTH seems to make very energetic music, with most of their songs having an energy score above 0.75 out of 1. Their music seems to have progressed from negative and angry towards a more diverse and positive style, with almost a kind of "dip" back towards negativity in their experimental album. 
+  
+### Homework week 7
+
+```{r}
+library(spotifyr)
+library(compmus)
+library(tidyverse)
+
+memorial <- get_tidy_audio_analysis("2VseRAuxHRFtlvr5zP1fKE?si=6d86a7afadaa4b93") %>%
+  select(segments) %>%
+  unnest(segments) %>%
+  select(start, duration, pitches)
+
+memorial %>%
+  mutate(pitches = map(pitches, compmus_normalise, "euclidean")) %>%
+  compmus_gather_chroma() %>% 
+  ggplot(
+    aes(
+      x = start + duration / 2,
+      width = duration,
+      y = pitch_class,
+      fill = value
+    )
+  ) +
+  geom_tile() +
+  labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
+  theme_minimal() +
+  scale_fill_viridis_c()
+
+```
+
+***
+
+This is a chromagram of the song *Memorial*
+
