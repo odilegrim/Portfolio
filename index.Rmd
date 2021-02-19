@@ -15,7 +15,7 @@ library(plotly)
 For my corpus I would like to look at the repertoire of Bring Me The Horizon. Since the release of their first four albums, which can, according to Google, all be classified as "metalcore", their music has progressed more towards alternative-/pop-/electronic-rock and they even released an [EP with experimental and electronic music](https://open.spotify.com/album/6yC6aLzX5knhWpKDidwxft). Having been in their fanbase since around 2013, when *Sempiternal* was released, I myself experienced the changes in their music. Some people argue that only their "old" music is good and their new music is "too soft", leading to them not listening to the band's music anymore. My question is, what exactly has changed about their music, which aspects have remained similar to their early music and which haven't? Also, how has this affected their listeners/ fanbase? Did the demographics change? I definitely think that BMTH's music after 2013 has changed significantly compared to their earlier music and it will be most interesting to dive deeper into their work from that time on. As for specific tracks to look at *Pray for Plagues*, *Chelsea Smile* and *Shadow Moses* from their earlier work and *Drown*, *Mantra* and *Ludens* from their more recent work might be representative tracks, as they were all released as singles and thus viewed as important. Some of their more recent albums include different genres within them, so it might also be useful to examine those more closely and determine what and how big those differences are and whether they are significant.
 
 
-### Bring Me The Horizon: different music styles compared
+### Bring Me The Horizon: different music styles over the years compared
 
 ```{r}
 library(tidyverse)
@@ -61,17 +61,17 @@ differentstyles <- ggplot(oldvsnew,
     you feel something",
                             "Memorial"), 
                   category = c("Experimental", "New music", "Old music"), 
-                  valence = c(0.3, 0.3, 0.15),
-                  energy = c(0.17, 0.295, 0.085)),
+                  valence = c(0.15, 0.165, 0.12),
+                  energy = c(0.17, 0.345, 0.0451)),
     color = "darkred",
-    size = 2.5,
+    size = 3,
     family = "mono"
   ) +
   geom_text(
     aes(x = valence, y = energy, label = label),
     data = tibble(label = c("Danceable", "Not danceable" ),
                   category = c("New music", "New music"),
-                  valence = c(0.43, 0.47),
+                  valence = c(0.375, 0.4),
                   energy = c(0.55, 0.47)),
     color = "grey30",
     size = 2.8,
@@ -90,7 +90,7 @@ For this plot I have split Bring Me The Horizon's music into three different cat
   
 With the highest danceability score being 0.6 out of a possible maximum of 1, most of their music isn't very danceable, but their newer music generally scores higher. The speechiness seems to be higher with higher valence scores, but generally the music doesn't seem very speechy. Looking at all their work together, the music seems very energetic and seems to have progressed from negative and angry towards a more diverse and positive style, with almost a kind of "dip" back towards negativity in their experimental album. 
   
-### Homework week 7
+### The saddest song in Bring Me The Horizon's repertoire (Homework week 7)
 
 ```{r}
 library(spotifyr)
