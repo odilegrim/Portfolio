@@ -34,36 +34,38 @@ oldvsnew <-
   )
 
 differentstyles <- ggplot(oldvsnew, 
-       aes(x = valence, y = energy, color = speechiness, size = danceability)) +
+                          aes(x = valence, y = energy, color = speechiness, size = danceability)) +
   geom_jitter(alpha = 0.5) +
   facet_wrap(~category) +
   scale_color_gradient(low = "black", high = "purple")+
   theme_linedraw() +
   labs(title = "Bring Me The Horizon: different music styles") +
   theme(plot.title = element_text( 
-                                  face = "bold", 
-                                  color = "black",
-                                  hjust = 0.5,
-                                  size = 15)) +
+    face = "bold", 
+    color = "black",
+    hjust = 0.5,
+    size = 13)) +
   theme(legend.title = element_text(
-                                    color = "black",
-                                    size = 12
-                                    )) +
+    color = "black",
+    size = 12
+  )) +
   theme(axis.title = element_text(
-                                  size = 12)) +
+    size = 12)) +
   xlab("Valence") + ylab("Energy") +
   theme(strip.text.x =  element_text(family = "mono")) +
-    geom_text(
+  geom_text(
     aes(x = valence, y = energy, label = label),
-  data = tibble(label = c("A Devastating Liberation", 
-                          "i apologise if 
-                          you feel something",
-                          "Memorial"), 
-                category = c("Experimental", "New music", "Old music"), 
-                valence = c(0.3, 0.2, 0.15),
-                energy = c(0.17, 0.295, 0.085)),
-  color = "darkred",
-  size = 3
+    data = tibble(label = c("A Devastating 
+    Liberation", 
+                            "i apologise if 
+    you feel something",
+                            "Memorial"), 
+                  category = c("Experimental", "New music", "Old music"), 
+                  valence = c(0.3, 0.3, 0.15),
+                  energy = c(0.17, 0.295, 0.085)),
+    color = "darkred",
+    size = 2.5,
+    family = "mono"
   ) +
   geom_text(
     aes(x = valence, y = energy, label = label),
@@ -72,7 +74,8 @@ differentstyles <- ggplot(oldvsnew,
                   valence = c(0.43, 0.47),
                   energy = c(0.55, 0.47)),
     color = "grey30",
-    size = 2.8
+    size = 2.8,
+    family = "mono"
   ) +
   theme(text = element_text(family = "mono"))
 
@@ -82,10 +85,10 @@ ggplotly(differentstyles)
 
 ***
 
-For this plot I have split Bring Me The Horizon's music into three different categories, "Old Music" containing their first four albums , "New music" containing their three most recent releases with exception of their experimental music from *Music to listen to~*, which is the third category. The reason I separated this work from the two main categories, is that it isn't exactly representative of either their "new" or "old" music style (hence "Experimental").
-  It is easily visible that Bring Me The Horizon's new music is much more varied than their old music. High energy and low valence means the music is angry, and high energy with high valence is happy. Considering this, we could conclude that their music has overall become happier. However, since the valence scores are mostly <0.5, you probably wouldn't say it was happy in itself, just happier than their old music. The experimental music has very low valence values, like BMTH's old music, and is also more angry and negative. Each category seems to have outliers that fall into the 'sad music' area, they are labeled in the plot.
+For this plot I have split Bring Me The Horizon's music into three different categories, "Old Music", their first four albums, "New music", their three most recent releases, with exception of their experimental music from *Music to listen to~*, which is the third category. This album isn't exactly representative of either their "new" or "old" music style, so I made it a separate category (hence "Experimental").
+  It is easily visible that BMTH's new music is much more varied than their old music. Considering that high energy + low valence = angry music, and high energy + high valence = happy music, we could conclude that their music has overall become happier. The experimental music has very low valence values, like BMTH's old music, and is also more angry and negative. Each category seems to have outliers that fall into the 'sad music' area, they are labeled in the plot.
   
-  The danceability, indicated by size, makes it visible that especially the very sad outliers are less "danceable" than the rest of them. Happier songs, mainly their new music, seem to be the most "danceable", but most of the music from *Music to listen to~* also seems to be more danceable. With the highest danceability score being 0.6 out of a possible maximum of 1, however, most of their music could not be considered as very danceable. The speechiness, indicated by colour, generally seems to be higher with higher numbers in valence, but also deffinitely has some outliers. Generally their music doesn't seem to be very speechy or to have an especially clear pattern in it in combination with the other factors shown here. Looking at all their work together, BMTH seems to make very energetic music, with most of their songs having an energy score above 0.75 out of 1. Their music seems to have progressed from negative and angry towards a more diverse and positive style, with almost a kind of "dip" back towards negativity in their experimental album. 
+With the highest danceability score being 0.6 out of a possible maximum of 1, most of their music isn't very danceable, but their newer music generally scores higher. The speechiness seems to be higher with higher valence scores, but generally the music doesn't seem very speechy. Looking at all their work together, the music seems very energetic and seems to have progressed from negative and angry towards a more diverse and positive style, with almost a kind of "dip" back towards negativity in their experimental album. 
   
 ### Homework week 7
 
