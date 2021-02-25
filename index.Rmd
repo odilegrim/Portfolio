@@ -112,7 +112,7 @@ ouch %>%
 A cepstogram of the song *Ouch*, which is the song with values closest to the mean valence, energy and speechiness in the "New Music" category.
 
 
-### The most popular song in the entire repertoire and it's self-similarity (homework week 8)
+### The most popular song in BMTH's entire repertoire and it's self-similarity (homework week 8)
 ```{r}
 library(spotifyr)
 library(ggplot2)
