@@ -10,14 +10,166 @@ output:
 library(plotly)
 ```
 
-### Corpus intdocution
+
+### Timbre analysis for the most average song of BMTH's old music (homework week 8)
+```{r}
+library(spotifyr)
+library(ggplot2)
+library(tidyverse)
+library(compmus)
+library(plotly)
+  
+swoeo <-
+  get_tidy_audio_analysis("1JGhCrOUIPdYG2n6K26SXE") %>% # Change URI.
+  compmus_align(sections, segments) %>%                     # Change `bars`
+  select(sections) %>%                                      #   in all three
+  unnest(sections) %>%                                      #   of these lines.
+  mutate(
+    pitches =
+      map(segments,
+          compmus_summarise, pitches,
+          method = "rms", norm = "euclidean"              # Change summary & norm.
+      )
+  ) %>%
+  mutate(
+    timbre =
+      map(segments,
+          compmus_summarise, timbre,
+          method = "rms", norm = "euclidean"              # Change summary & norm.
+      )
+  )
+
+swoeo %>%
+  compmus_gather_timbre() %>%
+  ggplot(
+    aes(
+      x = start + duration / 2,
+      width = duration,
+      y = basis,
+      fill = value
+    )
+  ) +
+  geom_tile() +
+  labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
+  scale_fill_viridis_c() +                              
+  theme_classic() +
+  labs(title = "Sleep With One Eye Open") +
+  theme(text = element_text(family = "mono"))
+```
+
+***
+A cepstogram of the song *Sleep With One Eye Open*, which is the song with values closest to the mean valence, energy and speechiness in the "Old Music" category.
+
+### Timbre analysis for the most average song of BMTH's new music (homework week 8)
+
+```{r}
+library(spotifyr)
+library(ggplot2)
+library(tidyverse)
+library(compmus)
+library(plotly)
+  
+ouch <-
+  get_tidy_audio_analysis("1PWFyfV7yYhlxHZX2g25wS") %>% # Change URI.
+  compmus_align(sections, segments) %>%                     # Change `bars`
+  select(sections) %>%                                      #   in all three
+  unnest(sections) %>%                                      #   of these lines.
+  mutate(
+    pitches =
+      map(segments,
+          compmus_summarise, pitches,
+          method = "rms", norm = "euclidean"              # Change summary & norm.
+      )
+  ) %>%
+  mutate(
+    timbre =
+      map(segments,
+          compmus_summarise, timbre,
+          method = "rms", norm = "euclidean"              # Change summary & norm.
+      )
+  )
+
+ouch %>%
+  compmus_gather_timbre() %>%
+  ggplot(
+    aes(
+      x = start + duration / 2,
+      width = duration,
+      y = basis,
+      fill = value
+    )
+  ) +
+  geom_tile() +
+  labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
+  scale_fill_viridis_c() +                              
+  theme_classic() +
+  labs(title = "Ouch") +
+  theme(text = element_text(family = "mono"))
+
+```
+
+***
+A cepstogram of the song *Ouch*, which is the song with values closest to the mean valence, energy and speechiness in the "New Music" category.
+
+
+### The most popular song in the entire repertoire and it's self-similarity (homework week 8)
+```{r}
+library(spotifyr)
+library(ggplot2)
+library(tidyverse)
+library(compmus)
+library(plotly)
+
+cyfmh <-
+  get_tidy_audio_analysis("0WSa1sucoNRcEeULlZVQXj") %>% # Change URI.
+  compmus_align(bars, segments) %>%                     # Change `bars`
+  select(bars) %>%                                      #   in all three
+  unnest(bars) %>%                                      #   of these lines.
+  mutate(
+    pitches =
+      map(segments,
+          compmus_summarise, pitches,
+          method = "mean", norm = "manhattan"              # Change summary & norm.
+      )
+  ) %>%
+  mutate(
+    timbre =
+      map(segments,
+          compmus_summarise, timbre,
+          method = "mean", norm = "manhattan"              # Change summary & norm.
+      )
+  )
+cyfmh %>%
+  compmus_self_similarity(timbre, "cosine") %>% 
+  ggplot(
+    aes(
+      x = xstart + xduration / 2,
+      width = xduration,
+      y = ystart + yduration / 2,
+      height = yduration,
+      fill = d
+    )
+  ) +
+  geom_tile() +
+  coord_fixed() +
+  scale_fill_viridis_c(guide = "none") +
+  theme_classic() +
+  labs(x = "", y = "") +
+  labs(title = "Can You Feel My Heart")
+
+```
+
+***
+A self-similarity matrix for Bring Me The Horizon's most popular song *Can You Feel My Heart*
+
+### An introduction to what this portfolio is about
 
 For my corpus I would like to look at the repertoire of Bring Me The Horizon. Since the release of their first four albums, which can, according to Google, all be classified as "metalcore", their music has progressed more towards alternative-/pop-/electronic-rock and they even released an [EP with experimental and electronic music](https://open.spotify.com/album/6yC6aLzX5knhWpKDidwxft). Having been in their fanbase since around 2013, when *Sempiternal* was released, I myself experienced the changes in their music. Some people argue that only their "old" music is good and their new music is "too soft", leading to them not listening to the band's music anymore. My question is, what exactly has changed about their music, which aspects have remained similar to their early music and which haven't? Also, how has this affected their listeners/ fanbase? Did the demographics change? I definitely think that BMTH's music after 2013 has changed significantly compared to their earlier music and it will be most interesting to dive deeper into their work from that time on. As for specific tracks to look at *Pray for Plagues*, *Chelsea Smile* and *Shadow Moses* from their earlier work and *Drown*, *Mantra* and *Ludens* from their more recent work might be representative tracks, as they were all released as singles and thus viewed as important. Some of their more recent albums include different genres within them, so it might also be useful to examine those more closely and determine what and how big those differences are and whether they are significant.
 
 
 ### Bring Me The Horizon: different music styles over the years compared
 
-```{r}
+```{r, fig.width = 8.3}
 library(tidyverse)
 library(spotifyr)
 library(plotly)
@@ -90,7 +242,7 @@ For this plot I have split Bring Me The Horizon's music into three different cat
   
 With the highest danceability score being 0.6 out of a possible maximum of 1, most of their music isn't very danceable, but their newer music generally scores higher. The speechiness seems to be higher with higher valence scores, but generally the music doesn't seem very speechy. Looking at all their work together, the music seems very energetic and seems to have progressed from negative and angry towards a more diverse and positive style, with almost a kind of "dip" back towards negativity in their experimental album. 
   
-### The saddest song in Bring Me The Horizon's repertoire (Homework week 7)
+### The saddest song in Bring Me The Horizon's repertoire
 
 ```{r}
 library(spotifyr)
@@ -117,12 +269,10 @@ memorial %>%
   labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
   theme_minimal() +
   scale_fill_viridis_c() +
-  theme(text = element_text(family = "mono"))
+  theme(text = element_text(family = "mono")) +
+  labs(title = "Memorial")
 
-onebyone <- get_tidy_audio_analysis("6sIbv1oWOuma2qV907MUbk?si=682db21021724ae8") %>%
-  select(segments) %>%
-  unnest(segments) %>%
-  select(start, duration, pitches)
+
 
 
 ```
