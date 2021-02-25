@@ -4,12 +4,14 @@ author: "Odile Grim"
 date: "2021"
 output: 
   flexdashboard::flex_dashboard:
-    storyboard: true
+    theme: journal
 ---
 ```{r}
 library(plotly)
 ```
 
+**Homework week 8** {.storyboard}
+=======================================================
 
 ### Timbre analysis for the most average song of BMTH's old music (homework week 8)
 ```{r}
@@ -155,21 +157,32 @@ cyfmh %>%
   scale_fill_viridis_c(guide = "none") +
   theme_classic() +
   labs(x = "", y = "") +
-  labs(title = "Can You Feel My Heart")
+  labs(title = "Can You Feel My Heart") +
+  theme(text = element_text(family = "mono"))
 
 ```
 
 ***
 A self-similarity matrix for Bring Me The Horizon's most popular song *Can You Feel My Heart*
 
-### An introduction to what this portfolio is about
 
-For my corpus I would like to look at the repertoire of Bring Me The Horizon. Since the release of their first four albums, which can, according to Google, all be classified as "metalcore", their music has progressed more towards alternative-/pop-/electronic-rock and they even released an [EP with experimental and electronic music](https://open.spotify.com/album/6yC6aLzX5knhWpKDidwxft). Having been in their fanbase since around 2013, when *Sempiternal* was released, I myself experienced the changes in their music. Some people argue that only their "old" music is good and their new music is "too soft", leading to them not listening to the band's music anymore. My question is, what exactly has changed about their music, which aspects have remained similar to their early music and which haven't? Also, how has this affected their listeners/ fanbase? Did the demographics change? I definitely think that BMTH's music after 2013 has changed significantly compared to their earlier music and it will be most interesting to dive deeper into their work from that time on. As for specific tracks to look at *Pray for Plagues*, *Chelsea Smile* and *Shadow Moses* from their earlier work and *Drown*, *Mantra* and *Ludens* from their more recent work might be representative tracks, as they were all released as singles and thus viewed as important. Some of their more recent albums include different genres within them, so it might also be useful to examine those more closely and determine what and how big those differences are and whether they are significant.
+**Introduction**
+===============================================================
 
+### **What my analysis is about**
+For my corpus I will look at the repertoire of Bring Me The Horizon. Since the release of their first four albums, which can, according to Google, all be classified as "metalcore", their music has progressed more towards alternative-/pop-/electronic-rock and they even released an [EP with experimental and electronic music](https://open.spotify.com/album/6yC6aLzX5knhWpKDidwxft). Having been in their fanbase since around 2013, when *Sempiternal* was released, I myself experienced the changes in their music. Some people argue that only their "old" music is good and their new music is "too soft", leading to them not listening to the band's music anymore. My question is, what exactly has changed about their music, which aspects have remained similar to their early music and which haven't? 
+
+I definitely think that BMTH's music after 2013 has changed significantly compared to their earlier music and it will be most interesting to dive deeper into their work from that time on. As for specific tracks to look at *Pray for Plagues*, *Chelsea Smile* and *Shadow Moses* from their earlier work and *Drown*, *Mantra* and *Ludens* from their more recent work might be representative tracks, as they were all released as singles and thus viewed as important. Some of their more recent albums include different genres within them, so it might also be useful to examine those more closely and determine what and how big those differences are and whether they are significant.
+
+### .........................................................................................................................................................................................................................................................................................................................................
+![](https://www.impericon-mag.com/nl/wp-content/uploads/sites/7/2020/10/bringmethehorizon.jpg)
+
+**Analysis** {.storyboard}
+=============================================================
 
 ### Bring Me The Horizon: different music styles over the years compared
 
-```{r, fig.width = 8.3}
+```{r, fig.width = 8.4}
 library(tidyverse)
 library(spotifyr)
 library(plotly)
@@ -242,7 +255,7 @@ For this plot I have split Bring Me The Horizon's music into three different cat
   
 With the highest danceability score being 0.6 out of a possible maximum of 1, most of their music isn't very danceable, but their newer music generally scores higher. The speechiness seems to be higher with higher valence scores, but generally the music doesn't seem very speechy. Looking at all their work together, the music seems very energetic and seems to have progressed from negative and angry towards a more diverse and positive style, with almost a kind of "dip" back towards negativity in their experimental album. 
   
-### The saddest song in Bring Me The Horizon's repertoire
+### The **saddest** song in Bring Me The Horizon's repertoire
 
 ```{r}
 library(spotifyr)
@@ -280,5 +293,42 @@ memorial %>%
 
 ***
 
-This is a chromagram of the song *Memorial*, which is, according to it's measurements of valence and energy, the saddest song in Bring Me The Horizon's entire repertoire. As you can see, the song is quite repetitive and has a few layers that really stand out. *Memorial* is an entirely instrumental song with a continuous underlying sound and is used in the album as a transition into the next track. There are clearly audible, and in the chromagram visible, high and loud 'screeching' noises in the song and a few notes that are softly and repeatedly being played throughout the song. The texture of the song is very simple and also very clearly repesented in this chromagram.
+This is a chromagram of the song *Memorial*, which is, according to it's measurements of valence and energy, the **saddest** song in Bring Me The Horizon's entire repertoire. As you can see, the song is **quite repetitive** and has a few layers that really stand out. *Memorial* is an entirely instrumental song with a continuous underlying sound and is used in the album as a transition into the next track. There are clearly audible, and in the chromagram visible, **high and loud 'screeching' noises** in the song and a few notes that are softly and repeatedly being played throughout the song. The texture of the song is very simple and also very clearly repesented in this chromagram.
 
+### The **happiest** song in Bring Me The Horizon's repertoire
+
+```{r}
+library(spotifyr)
+library(compmus)
+library(tidyverse)
+
+onebyone <- get_tidy_audio_analysis("6sIbv1oWOuma2qV907MUbk") %>%
+  select(segments) %>%
+  unnest(segments) %>%
+  select(start, duration, pitches)
+
+onebyone %>%
+  mutate(pitches = map(pitches, compmus_normalise, "euclidean")) %>%
+  compmus_gather_chroma() %>% 
+  ggplot(
+    aes(
+      x = start + duration / 2,
+      width = duration,
+      y = pitch_class,
+      fill = value
+    )
+  ) +
+  geom_tile() +
+  labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
+  theme_minimal() +
+  scale_fill_viridis_c() +
+  theme(text = element_text(family = "mono")) +
+  labs(title = "1x1 (feat. Nova Twins)")
+
+```
+
+***
+This is a chromagram of the song *1x1 (feat. Nova Twins)*, which is, according to it's measurements of valence and energy, the **happiest** song in Bring Me The Horizon's entire repertoire. As you can see, this song is **all over the place**. The line of C#/Db stands out a little bit, with a higher magnitude overall. The song consists of heavy drums and guitar combined with electronic music and keyboard sounds, all accompanied by the singing voices of either Bring Me The Horizon's frontman Oliver Sykes or the featuring artist the Nova Twins. The only big visible thing that is happening here is at **around 160 seconds**, where the heavy instruments that support the rest of the song go quiet and we hear only a keyboard and a singing voice.
+
+Conclusion
+=============================================================================
