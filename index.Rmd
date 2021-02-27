@@ -60,7 +60,9 @@ swoeo %>%
 ```
 
 ***
-A cepstogram of the song *Sleep With One Eye Open*, which is the song with values closest to the mean valence, energy and speechiness in the "Old Music" category.
+A cepstrogram of the song *Sleep With One Eye Open*, which is the song with values closest to the mean valence, energy and speechiness in the "Old Music" category.
+
+*(I have a little bit of trouble interpreting these cepstrograms and apart from comparing the one for their old music and the one for their new music purely based on what it looks like, I don't exactly know what it means. Does anyone have tips or feedback on this?)*
 
 ### Timbre analysis for the most average song of BMTH's new music (homework week 8)
 
@@ -111,7 +113,7 @@ ouch %>%
 ```
 
 ***
-A cepstogram of the song *Ouch*, which is the song with values closest to the mean valence, energy and speechiness in the "New Music" category.
+A cepstrogram of the song *Ouch*, which is the song with values closest to the mean valence, energy and speechiness in the "New Music" category.
 
 
 ### The most popular song in BMTH's entire repertoire and it's self-similarity (homework week 8)
@@ -163,7 +165,7 @@ cyfmh %>%
 ```
 
 ***
-A self-similarity matrix for Bring Me The Horizon's most popular song *Can You Feel My Heart*
+This is a self-similarity matrix for Bring Me The Horizon's most popular song *Can You Feel My Heart*, with a popularity score of 79. The beginning of the song, up to approximately 125 seconds, has a clear pattern. There is a distinct melody that is repeated and alternated by singing accompanied by a calmer melody, functioning as a verse and chorus pattern. This forms a clear checkerboard pattern. At about 125 seconds the bridge sets in and the distinct melody of the chorus is not heard again until a little snippet around 180 seconds, followed by a little 'individual' section of heavy guitar music, which forms the small dark square the self-similarity matrix shows on the top right. The melody from the chorus sets in again at about 200 seconds. Here we can see a checkerboard pattern, like the one in the beginning of the song, starting to reappear.
 
 
 **Introduction**
