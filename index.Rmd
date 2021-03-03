@@ -13,109 +13,6 @@ library(plotly)
 **Homework week 8** {.storyboard}
 =======================================================
 
-### Timbre analysis for the most average song of BMTH's old music (homework week 8)
-```{r}
-library(spotifyr)
-library(ggplot2)
-library(tidyverse)
-library(compmus)
-library(plotly)
-  
-swoeo <-
-  get_tidy_audio_analysis("1JGhCrOUIPdYG2n6K26SXE") %>% # Change URI.
-  compmus_align(sections, segments) %>%                     # Change `bars`
-  select(sections) %>%                                      #   in all three
-  unnest(sections) %>%                                      #   of these lines.
-  mutate(
-    pitches =
-      map(segments,
-          compmus_summarise, pitches,
-          method = "rms", norm = "euclidean"              # Change summary & norm.
-      )
-  ) %>%
-  mutate(
-    timbre =
-      map(segments,
-          compmus_summarise, timbre,
-          method = "rms", norm = "euclidean"              # Change summary & norm.
-      )
-  )
-
-swoeo %>%
-  compmus_gather_timbre() %>%
-  ggplot(
-    aes(
-      x = start + duration / 2,
-      width = duration,
-      y = basis,
-      fill = value
-    )
-  ) +
-  geom_tile() +
-  labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
-  scale_fill_viridis_c() +                              
-  theme_classic() +
-  labs(title = "Sleep With One Eye Open") +
-  theme(text = element_text(family = "mono"))
-```
-
-***
-A cepstrogram of the song *Sleep With One Eye Open*, which is the song with values closest to the mean valence, energy and speechiness in the "Old Music" category.
-
-*(I have a little bit of trouble interpreting these cepstrograms and apart from comparing the one for their old music and the one for their new music purely based on what it looks like, I don't exactly know what it means. Does anyone have tips or feedback on this?)*
-
-### Timbre analysis for the most average song of BMTH's new music (homework week 8)
-
-```{r}
-library(spotifyr)
-library(ggplot2)
-library(tidyverse)
-library(compmus)
-library(plotly)
-  
-ouch <-
-  get_tidy_audio_analysis("1PWFyfV7yYhlxHZX2g25wS") %>% # Change URI.
-  compmus_align(sections, segments) %>%                     # Change `bars`
-  select(sections) %>%                                      #   in all three
-  unnest(sections) %>%                                      #   of these lines.
-  mutate(
-    pitches =
-      map(segments,
-          compmus_summarise, pitches,
-          method = "rms", norm = "euclidean"              # Change summary & norm.
-      )
-  ) %>%
-  mutate(
-    timbre =
-      map(segments,
-          compmus_summarise, timbre,
-          method = "rms", norm = "euclidean"              # Change summary & norm.
-      )
-  )
-
-ouch %>%
-  compmus_gather_timbre() %>%
-  ggplot(
-    aes(
-      x = start + duration / 2,
-      width = duration,
-      y = basis,
-      fill = value
-    )
-  ) +
-  geom_tile() +
-  labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
-  scale_fill_viridis_c() +                              
-  theme_classic() +
-  labs(title = "Ouch") +
-  theme(text = element_text(family = "mono"))
-
-```
-
-***
-A cepstrogram of the song *Ouch*, which is the song with values closest to the mean valence, energy and speechiness in the "New Music" category.
-
-
 ### The most popular track and it's self-similarity (homework week 8)
 ```{r}
 library(spotifyr)
@@ -384,6 +281,99 @@ onebyone %>%
 
 ***
 This is a chromagram of the song *1x1 (feat. Nova Twins)*, which is, according to it's measurements of valence and energy, the **happiest** song in Bring Me The Horizon's entire repertoire. As you can see, this song is **all over the place**. The line of C#/Db stands out a little bit, with a higher magnitude overall. The song consists of heavy drums and guitar combined with electronic music and keyboard sounds, all accompanied by the singing voices of either Bring Me The Horizon's frontman Oliver Sykes or the featuring artist the Nova Twins. The only big visible thing that is happening here is at **around 160 seconds**, where the heavy instruments that support the rest of the song go quiet and we hear only a keyboard and a singing voice.
+
+### **Cepstrograms**
+
+```{r}
+  library(spotifyr)
+library(ggplot2)
+library(tidyverse)
+library(compmus)
+library(plotly)
+library(Rmisc)
+
+swoeo <-
+  get_tidy_audio_analysis("1JGhCrOUIPdYG2n6K26SXE") %>% # Change URI.
+  compmus_align(sections, segments) %>%                     # Change `bars`
+  select(sections) %>%                                      #   in all three
+  unnest(sections) %>%                                      #   of these lines.
+  mutate(
+    pitches =
+      map(segments,
+          compmus_summarise, pitches,
+          method = "rms", norm = "euclidean"              # Change summary & norm.
+      )
+  ) %>%
+  mutate(
+    timbre =
+      map(segments,
+          compmus_summarise, timbre,
+          method = "rms", norm = "euclidean"              # Change summary & norm.
+      )
+  )
+
+swoeoplot <- swoeo %>%
+  compmus_gather_timbre() %>%
+  ggplot(
+    aes(
+      x = start + duration / 2,
+      width = duration,
+      y = basis,
+      fill = value
+    )
+  ) +
+  geom_tile() +
+  labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
+  scale_fill_viridis_c() +                              
+  theme_classic() +
+  labs(title = "Sleep With One Eye Open") +
+  theme(text = element_text(family = "mono"))
+
+ouch <-
+  get_tidy_audio_analysis("1PWFyfV7yYhlxHZX2g25wS") %>% # Change URI.
+  compmus_align(sections, segments) %>%                     # Change `bars`
+  select(sections) %>%                                      #   in all three
+  unnest(sections) %>%                                      #   of these lines.
+  mutate(
+    pitches =
+      map(segments,
+          compmus_summarise, pitches,
+          method = "rms", norm = "euclidean"              # Change summary & norm.
+      )
+  ) %>%
+  mutate(
+    timbre =
+      map(segments,
+          compmus_summarise, timbre,
+          method = "rms", norm = "euclidean"              # Change summary & norm.
+      )
+  )
+
+ouchplot <- ouch %>%
+  compmus_gather_timbre() %>%
+  ggplot(
+    aes(
+      x = start + duration / 2,
+      width = duration,
+      y = basis,
+      fill = value
+    )
+  ) +
+  geom_tile() +
+  labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
+  scale_fill_viridis_c() +                              
+  theme_classic() +
+  labs(title = "Ouch") +
+  theme(text = element_text(family = "mono"))
+
+library(gridExtra)
+grid.arrange(swoeoplot, ouchplot, nrow = 2)
+
+```
+
+***
+
+Cepstrograms for the songs that lay the closes to the average energy, valence and danceability in BMTH's old music (*Sleep With One Eye Open*) and new music (*Ouch*). As you can see the cepstrograms both have more intensity in the bottom, but *Sleep With One Eye Open* is "squished down" even more than *Ouch*. Both songs have a focus on the c02 section and generally go up to c06. Even though both songs do not have a lot of intensity in c07 to 12, *Ouch* does seem to have a bit more intensity there than *Sleep With One Eye Open*. This shows that the timbre features of the songs are quite different from each other.
 
 Conclusion
 =============================================================================
