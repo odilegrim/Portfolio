@@ -19,7 +19,7 @@ library(gridExtra)
 =======================================================
 
 ### **Chordograms** for BMTH's singles
-```{r}
+```{r, fig.width = 12, fig.height = 10}
   circshift <- function(v, n) {
     if (n == 0) v else c(tail(v, n), head(v, -n))
   }
@@ -100,7 +100,7 @@ ludensplot_chord <- ludens %>%
   theme_minimal() +
   labs(x = "Time (s)", y = "", title = "Ludens") +
   theme(text = element_text(family = "mono")) +
-  theme(axis.text.y = element_text(size = 7))
+  theme(axis.text.y = element_text(size = 11))
 
 mantra <-
   get_tidy_audio_analysis("060RNnzoMay3wKJek1faPc") %>%
@@ -129,7 +129,7 @@ mantraplot_chord <- mantra %>%
   theme_minimal() +
   labs(x = "Time (s)", y = "", title = "MANTRA") +
   theme(text = element_text(family = "mono")) +
-  theme(axis.text.y = element_text(size = 7))
+  theme(axis.text.y = element_text(size = 11))
 
 
 drown <-
@@ -159,7 +159,7 @@ drownplot_chord <- drown %>%
   theme_minimal() +
   labs(x = "Time (s)", y = "", title = "Drown") +
   theme(text = element_text(family = "mono")) +
-  theme(axis.text.y = element_text(size = 7))
+  theme(axis.text.y = element_text(size = 11))
 
 shadowmoses <-
   get_tidy_audio_analysis("68osIGtVjM7QWVe6pazLHj") %>%
@@ -188,7 +188,7 @@ shadowmosesplot_chord <- shadowmoses %>%
   theme_minimal() +
   labs(x = "Time (s)", y = "", title = "Shadow Moses") +
   theme(text = element_text(family = "mono")) +
-  theme(axis.text.y = element_text(size = 7))
+  theme(axis.text.y = element_text(size = 11))
 
 chelseasmile <-
   get_tidy_audio_analysis("2C5jGbR23YLonV7Lton6fV") %>%
@@ -217,7 +217,7 @@ chelseasmileplot_chord <- chelseasmile %>%
   theme_minimal() +
   labs(x = "Time (s)", y = "", title = "Chelsea Smile") +
   theme(text = element_text(family = "mono")) +
-  theme(axis.text.y = element_text(size = 7))
+  theme(axis.text.y = element_text(size = 11))
 
 prayforplagues <-
   get_tidy_audio_analysis("0zYxfgyqypkG7rRwFqyisT") %>%
@@ -246,12 +246,15 @@ prayforplaguesplot_chord <- prayforplagues %>%
   theme_minimal() +
   labs(x = "Time (s)", y = "", title = "Pray For Plagues") +
   theme(text = element_text(family = "mono")) +
-  theme(axis.text.y = element_text(size = 7))
+  theme(axis.text.y = element_text(size = 11))
+
 
 grid.arrange(prayforplaguesplot_chord, chelseasmileplot_chord, 
              shadowmosesplot_chord,
              drownplot_chord, mantraplot_chord, ludensplot_chord, 
-             nrow = 2, ncol = 3 )
+             nrow = 2, ncol = 3)
+
+
 
 
 
