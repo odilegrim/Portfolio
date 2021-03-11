@@ -372,6 +372,64 @@ For this plot I have split Bring Me The Horizon's music into three different cat
   It is easily visible that BMTH's new music is much more varied than their old music. Considering that high energy + low valence = angry music, and high energy + high valence = happy music, we could conclude that their music has overall become happier. The experimental music has very low valence values, like BMTH's old music, and is also more angry and negative. Each category seems to have outliers that fall into the 'sad music' area, they are labeled in the plot.
   
 With the highest danceability score being 0.6 out of a possible maximum of 1, most of their music isn't very danceable, but their newer music generally scores higher. The speechiness seems to be higher with higher valence scores, but generally the music doesn't seem very speechy. Looking at all their work together, the music seems very energetic and seems to have progressed from negative and angry towards a more diverse and positive style, with almost a kind of "dip" back towards negativity in their experimental album. 
+
+### **Popularity** scores for all of BMTH's albums
+
+```{r}
+
+oldvsnew_releasedate <- oldvsnew %>%
+  arrange(track.album.release_date)
+
+ggplot(oldvsnew_releasedate, aes(track.album.name, track.popularity, 
+                                                       color = category)) +
+  geom_point(alpha = 0.6, size = 3) +
+  scale_color_brewer(palette = "Dark2") +
+  theme_linedraw() +
+  scale_x_discrete(breaks = c("Count Your Blessings",
+                              "Suicide Season",
+                              "There is a Hell Believe Me I've Seen It. There is a Heaven Let's Keep it a Secret",
+                              "Sempiternal (Expanded Edition)",
+                              "That's The Spirit",
+                              "amo",
+                              "Music to listen to~dance to~blaze to~pray to~feed to~sleep to~talk to~grind to~trip to~breathe to~help to~hurt to~scroll to~roll to~love to~hate to~learn Too~plot to~play to~be to~feel to~breed to~sweat to~dream to~hide to~live to~die to~GO TO",
+                              "POST HUMAN: SURVIVAL HORROR"),
+                   labels = c("Count Your Blessings",
+                              "Suicide Season", 
+                              "There is a Hell...",
+                              "Sempiternal",
+                              "That's The Spirit",
+                              "amo",
+                              "Music to listen to~",
+                              "POST HUMAN"),
+                   limits = c("Count Your Blessings",
+                              "Suicide Season",
+                              "There is a Hell Believe Me I've Seen It. There is a Heaven Let's Keep it a Secret",
+                              "Sempiternal (Expanded Edition)",
+                              "That's The Spirit",
+                              "amo",
+                              "Music to listen to~dance to~blaze to~pray to~feed to~sleep to~talk to~grind to~trip to~breathe to~help to~hurt to~scroll to~roll to~love to~hate to~learn Too~plot to~play to~be to~feel to~breed to~sweat to~dream to~hide to~live to~die to~GO TO",
+                              "POST HUMAN: SURVIVAL HORROR")
+                     ) +
+  theme(text = element_text(family = "mono")) +
+  labs(y = "Popularity") +
+  labs(title = "Track popularity per album") +
+  theme(axis.title.x = element_blank()) +
+  labs(color = "Category" ) +
+  stat_summary(
+    geom = "point",
+    fun = "mean",
+    col = "darkred",
+    size = 7,
+    shape = 21,
+    fill = "pink",
+    alpha = 0.4
+  ) +
+  theme(axis.text.x = element_text(angle = 70, hjust = 1, size = 8)) 
+```
+
+***
+
+This plot shows the popularity scores for the songs on all of Bring Me The Horizon's albums, they are in order of their release date from oldest to most recent. The bigger transparent red/pink circles show the **mean popularity** for each album. It is easy to see that their older music is the least popular of all and *That's The Spirit* and *POST HUMAN: SURVIVAL HORROR* are their most popular albums. Considering the fact that their music style really started changing on *Sempiternal*, it is not weird to see that the popularity shoots upwards from that album on. Of course, the experimental album *Music to listen to~* creates a big dip in popularity, since it is completely different from what the band usually produces and is not widely liked by fans.
   
 ### **Chromagram** for the **saddest** song in Bring Me The Horizon's repertoire
 
