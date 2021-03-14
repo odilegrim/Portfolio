@@ -17,270 +17,88 @@ library(gridExtra)
 
 
 
-**Homework week 9** {.storyboard}
+**Homework week 10** {.storyboard}
 =======================================================
 
-### **Chordograms** for BMTH's singles
 
+### **Tempo analysis** for Bring Me The Horizon's repertoire
 
-```{r, fig.width = 12, fig.height = 10}
-  circshift <- function(v, n) {
-    if (n == 0) v else c(tail(v, n), head(v, -n))
-  }
+```{r}
+old <- get_playlist_audio_features("", "6oeRMX8XZ8IS7MCDb6Z1BG")
+new <- get_playlist_audio_features("", "4k98rVhcCw54dhLaUMiyLK")
+experimental <- get_playlist_audio_features("", "1EIpRI9TozVUiehlxAmmHq")
 
-#      C     C#    D     Eb    E     F     F#    G     Ab    A     Bb    B
-major_chord <-
-  c(   1,    0,    0,    0,    1,    0,    0,    1,    0,    0,    0,    0)
-minor_chord <-
-  c(   1,    0,    0,    1,    0,    0,    0,    1,    0,    0,    0,    0)
-seventh_chord <-
-  c(   1,    0,    0,    0,    1,    0,    0,    1,    0,    0,    1,    0)
-
-
-chord_templates <-
-  tribble(
-    ~name, ~template,
-    "Gb:7", circshift(seventh_chord, 6),
-    "Gb:maj", circshift(major_chord, 6),
-    "Bb:min", circshift(minor_chord, 10),
-    "Db:maj", circshift(major_chord, 1),
-    "F:min", circshift(minor_chord, 5),
-    "Ab:7", circshift(seventh_chord, 8),
-    "Ab:maj", circshift(major_chord, 8),
-    "C:min", circshift(minor_chord, 0),
-    "Eb:7", circshift(seventh_chord, 3),
-    "Eb:maj", circshift(major_chord, 3),
-    "G:min", circshift(minor_chord, 7),
-    "Bb:7", circshift(seventh_chord, 10),
-    "Bb:maj", circshift(major_chord, 10),
-    "D:min", circshift(minor_chord, 2),
-    "F:7", circshift(seventh_chord, 5),
-    "F:maj", circshift(major_chord, 5),
-    "A:min", circshift(minor_chord, 9),
-    "C:7", circshift(seventh_chord, 0),
-    "C:maj", circshift(major_chord, 0),
-    "E:min", circshift(minor_chord, 4),
-    "G:7", circshift(seventh_chord, 7),
-    "G:maj", circshift(major_chord, 7),
-    "B:min", circshift(minor_chord, 11),
-    "D:7", circshift(seventh_chord, 2),
-    "D:maj", circshift(major_chord, 2),
-    "F#:min", circshift(minor_chord, 6),
-    "A:7", circshift(seventh_chord, 9),
-    "A:maj", circshift(major_chord, 9),
-    "C#:min", circshift(minor_chord, 1),
-    "E:7", circshift(seventh_chord, 4),
-    "E:maj", circshift(major_chord, 4),
-    "G#:min", circshift(minor_chord, 8),
-    "B:7", circshift(seventh_chord, 11),
-    "B:maj", circshift(major_chord, 11),
-    "D#:min", circshift(minor_chord, 3)
+oldvsnew <-
+  bind_rows(
+    old %>% mutate(category = "Old music"),
+    new %>% mutate(category = "New music"),
+    experimental %>% mutate(category = "Experimental")
   )
 
-ludens <-
-  get_tidy_audio_analysis("4xWirulal0kGikFE3WSU75") %>%
-  compmus_align(sections, segments) %>%
-  select(sections) %>%
-  unnest(sections) %>%
-  mutate(
-    pitches =
-      map(segments,
-          compmus_summarise, pitches,
-          method = "mean", norm = "manhattan"
-      )
-  ) 
-
-ludensplot_chord <- ludens %>% 
-  compmus_match_pitch_template(
-    chord_templates,         # Change to chord_templates if descired
-    method = "euclidean",  # Try different distance metrics
-    norm = "chebyshev"     # Try different norms
-  ) %>%
-  ggplot(
-    aes(x = start + duration / 2, width = duration, y = name, fill = d)
+ggplot(oldvsnew, aes(track.album.name, tempo, color = category)) +
+  geom_point(size = 3, alpha = 0.6) +
+  theme_linedraw() +
+  scale_color_brewer(palette = "Dark2") +
+  scale_x_discrete(breaks = c("Count Your Blessings",
+                              "Suicide Season",
+                              "There is a Hell Believe Me I've Seen It. There is a Heaven Let's Keep it a Secret",
+                              "Sempiternal (Expanded Edition)",
+                              "That's The Spirit",
+                              "amo",
+                              "Music to listen to~dance to~blaze to~pray to~feed to~sleep to~talk to~grind to~trip to~breathe to~help to~hurt to~scroll to~roll to~love to~hate to~learn Too~plot to~play to~be to~feel to~breed to~sweat to~dream to~hide to~live to~die to~GO TO",
+                              "POST HUMAN: SURVIVAL HORROR"),
+                   labels = c("Count Your Blessings",
+                              "Suicide Season", 
+                              "There is a Hell...",
+                              "Sempiternal",
+                              "That's The Spirit",
+                              "amo",
+                              "Music to listen to~",
+                              "POST HUMAN"),
+                   limits = c("Count Your Blessings",
+                              "Suicide Season",
+                              "There is a Hell Believe Me I've Seen It. There is a Heaven Let's Keep it a Secret",
+                              "Sempiternal (Expanded Edition)",
+                              "That's The Spirit",
+                              "amo",
+                              "Music to listen to~dance to~blaze to~pray to~feed to~sleep to~talk to~grind to~trip to~breathe to~help to~hurt to~scroll to~roll to~love to~hate to~learn Too~plot to~play to~be to~feel to~breed to~sweat to~dream to~hide to~live to~die to~GO TO",
+                              "POST HUMAN: SURVIVAL HORROR")
   ) +
-  geom_tile() +
-  scale_fill_viridis_c(guide = "none") +
-  theme_minimal() +
-  labs(x = "Time (s)", y = "", title = "Ludens") +
   theme(text = element_text(family = "mono")) +
-  theme(axis.text.y = element_text(size = 11),
-        axis.text.x = element_text(size = 11),
-        plot.title = element_text(size = 18))
-
-mantra <-
-  get_tidy_audio_analysis("060RNnzoMay3wKJek1faPc") %>%
-  compmus_align(sections, segments) %>%
-  select(sections) %>%
-  unnest(sections) %>%
-  mutate(
-    pitches =
-      map(segments,
-          compmus_summarise, pitches,
-          method = "mean", norm = "manhattan"
-      )
-  ) 
-
-mantraplot_chord <- mantra %>% 
-  compmus_match_pitch_template(
-    chord_templates,         # Change to chord_templates if descired
-    method = "euclidean",  # Try different distance metrics
-    norm = "chebyshev"     # Try different norms
-  ) %>%
-  ggplot(
-    aes(x = start + duration / 2, width = duration, y = name, fill = d)
+  theme(axis.text.x = element_text(angle = 60, hjust = 1, size = 8)) +
+  theme(axis.title.x = element_blank()) +
+  labs(y = "Tempo (BPM)", title = "Tempo for BMTH's music", color = "Category") +
+  stat_summary(
+    geom = "point",
+    fun = "mean",
+    col = "darkred",
+    size = 7,
+    shape = 21,
+    fill = "pink",
+    alpha = 0.5
   ) +
-  geom_tile() +
-  scale_fill_viridis_c(guide = "none") +
-  theme_minimal() +
-  labs(x = "Time (s)", y = "", title = "MANTRA") +
-  theme(text = element_text(family = "mono")) +
-  theme(axis.text.y = element_text(size = 11),
-        axis.text.x = element_text(size = 11),
-        plot.title = element_text(size = 18))
-
-
-drown <-
-  get_tidy_audio_analysis("6o39Ln9118FKTMbM4BvcEy") %>%
-  compmus_align(sections, segments) %>%
-  select(sections) %>%
-  unnest(sections) %>%
-  mutate(
-    pitches =
-      map(segments,
-          compmus_summarise, pitches,
-          method = "mean", norm = "manhattan"
-      )
-  ) 
-
-drownplot_chord <- drown %>% 
-  compmus_match_pitch_template(
-    chord_templates,         # Change to chord_templates if descired
-    method = "euclidean",  # Try different distance metrics
-    norm = "chebyshev"     # Try different norms
-  ) %>%
-  ggplot(
-    aes(x = start + duration / 2, width = duration, y = name, fill = d)
-  ) +
-  geom_tile() +
-  scale_fill_viridis_c(guide = "none") +
-  theme_minimal() +
-  labs(x = "Time (s)", y = "", title = "Drown") +
-  theme(text = element_text(family = "mono")) +
-  theme(axis.text.y = element_text(size = 11),
-        axis.text.x = element_text(size = 11),
-        plot.title = element_text(size = 18))
-
-shadowmoses <-
-  get_tidy_audio_analysis("68osIGtVjM7QWVe6pazLHj") %>%
-  compmus_align(sections, segments) %>%
-  select(sections) %>%
-  unnest(sections) %>%
-  mutate(
-    pitches =
-      map(segments,
-          compmus_summarise, pitches,
-          method = "mean", norm = "manhattan"
-      )
-  ) 
-
-shadowmosesplot_chord <- shadowmoses %>% 
-  compmus_match_pitch_template(
-    chord_templates,         # Change to chord_templates if descired
-    method = "euclidean",  # Try different distance metrics
-    norm = "chebyshev"     # Try different norms
-  ) %>%
-  ggplot(
-    aes(x = start + duration / 2, width = duration, y = name, fill = d)
-  ) +
-  geom_tile() +
-  scale_fill_viridis_c(guide = "none") +
-  theme_minimal() +
-  labs(x = "Time (s)", y = "", title = "Shadow Moses") +
-  theme(text = element_text(family = "mono")) +
-  theme(axis.text.y = element_text(size = 11),
-        axis.text.x = element_text(size = 11),
-        plot.title = element_text(size = 18))
-
-chelseasmile <-
-  get_tidy_audio_analysis("2C5jGbR23YLonV7Lton6fV") %>%
-  compmus_align(sections, segments) %>%
-  select(sections) %>%
-  unnest(sections) %>%
-  mutate(
-    pitches =
-      map(segments,
-          compmus_summarise, pitches,
-          method = "mean", norm = "manhattan"
-      )
-  ) 
-
-chelseasmileplot_chord <- chelseasmile %>% 
-  compmus_match_pitch_template(
-    chord_templates,         # Change to chord_templates if descired
-    method = "euclidean",  # Try different distance metrics
-    norm = "chebyshev"     # Try different norms
-  ) %>%
-  ggplot(
-    aes(x = start + duration / 2, width = duration, y = name, fill = d)
-  ) +
-  geom_tile() +
-  scale_fill_viridis_c(guide = "none") +
-  theme_minimal() +
-  labs(x = "Time (s)", y = "", title = "Chelsea Smile") +
-  theme(text = element_text(family = "mono")) +
-  theme(axis.text.y = element_text(size = 11),
-        axis.text.x = element_text(size = 11),
-        plot.title = element_text(size = 18))
-
-prayforplagues <-
-  get_tidy_audio_analysis("0zYxfgyqypkG7rRwFqyisT") %>%
-  compmus_align(sections, segments) %>%
-  select(sections) %>%
-  unnest(sections) %>%
-  mutate(
-    pitches =
-      map(segments,
-          compmus_summarise, pitches,
-          method = "mean", norm = "manhattan"
-      )
-  ) 
-
-prayforplaguesplot_chord <- prayforplagues %>% 
-  compmus_match_pitch_template(
-    chord_templates,         # Change to chord_templates if descired
-    method = "euclidean",  # Try different distance metrics
-    norm = "chebyshev"     # Try different norms
-  ) %>%
-  ggplot(
-    aes(x = start + duration / 2, width = duration, y = name, fill = d)
-  ) +
-  geom_tile() +
-  scale_fill_viridis_c(guide = "none") +
-  theme_minimal() +
-  labs(x = "Time (s)", y = "", title = "Pray For Plagues") +
-  theme(text = element_text(family = "mono")) +
-  theme(axis.text.y = element_text(size = 11),
-        axis.text.x = element_text(size = 11),
-        plot.title = element_text(size = 18))
-
-
-grid.arrange(prayforplaguesplot_chord, chelseasmileplot_chord, 
-             shadowmosesplot_chord,
-             drownplot_chord, mantraplot_chord, ludensplot_chord, 
-             nrow = 2, ncol = 3)
-
-
-
+  stat_summary(aes(group = 1), 
+               fun = mean, 
+               geom = "line", 
+               colour = "darkred",
+               alpha = 0.3) 
 
 
 ```
 
 ***
 
-These are **chordograms** for some of the singles of all of Bring Me The Horizons albums in the old and new music categories (the experimental catagory doesn't have any singles), arranged from oldest to newest (left to right, top to bottom). As you can see, there is a lot going on in all these songs. When listening to the music you can easily follow along in the chordograms. Loud percussion and distorted guitar sounds can make for **bright yellow lines**, like the one around 70 seconds in *Shadow Moses*. Considering this, it is clearly visible that Bring Me The Horizon keep using this a lot in their music over time. It is interesting to see that the screaming in *Pray For Plagues* leads to less intense recognition of chords, but does not necessarily create the bright yellow areas mentioned before. 
+This plot displays the tempo in beats per minute for Bring Me The Horizon's entire repertoire, the albums are sorted by their release date and each dot represents a song. The bigger red/pink circles represent the **mean tempo for each album**. It is interesting to see that their old music has the lowest tempo and it starts climbing up when their music starts to drift away from the "metalcore" genre. In their newer music the mean line almost seems to be coherent with the means of popularity for these albums.
 
-When comparing the songs to see what happened to BMTH's music over time, you could say that **their music has become more varied**. The older songs have a simpler pattern than the newer songs, which have a lot of changes in them.
+### **Tempograms**
+
+```{r}
+
+"my laptop is failing me and can't make the tempograms"
+```
+
+***
+
 
 
 
@@ -424,7 +242,12 @@ ggplot(oldvsnew_releasedate, aes(track.album.name, track.popularity,
     fill = "pink",
     alpha = 0.4
   ) +
-  theme(axis.text.x = element_text(angle = 70, hjust = 1, size = 8)) 
+  stat_summary(aes(group = 1), 
+               fun = mean, 
+               geom = "line", 
+               colour = "darkred",
+               alpha = 0.3) +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1, size = 8)) 
 ```
 
 ***
@@ -767,6 +590,64 @@ grid.arrange(cyfmhplot_selfsim, kingslayerplot_selfsim,
 
 These are **timbre based self-similarity matrices** for some of Bring Me The Horizons most popular songs (*Can You Feel My Heart* and *Kingslayer (feat. BABYMETAL)*) and some of their least popular songs (*Liquor & Love Lost* and *A Lot Like Vegas*). A quick look at these figures shows you that the popular songs have **more distinct checkerboard patterns** in them, which shows that they are more homogenous. *A Lot Like Vegas* also has a checkerboard pattern in it, but one that is divided into bigger chunks. The popular songs are homogenous, but also **alternate more** between the different sections in the song, which could be a reason they are more popular. The **bright criss-crossing lines** indicate moments in the music that are different from everything else, *Liquor & Love Lost* does not seem to have a lot of those moments, which could be a reason the song is less well-liked. On the other hand, *A Lot Like Vegas* does seem to have quite a bit of those moments, so it is probably a combination with other factors. 
 
+### **Timbre** changes in categories
+```{r}
+old_timbre <-
+  get_playlist_audio_features( "",
+    "6oeRMX8XZ8IS7MCDb6Z1BG"
+  ) %>%
+  slice(1:30) %>%
+  add_audio_analysis()
+new_timbre <-
+  get_playlist_audio_features(
+    "",
+    "4k98rVhcCw54dhLaUMiyLK"
+  ) %>%
+  slice(1:30) %>%
+  add_audio_analysis()
+experimental_timbre <-
+  get_playlist_audio_features(
+    "",
+    "1EIpRI9TozVUiehlxAmmHq"
+  ) %>%
+  slice(1:30) %>%
+  add_audio_analysis()
+
+musics <-
+  old_timbre %>%
+  mutate(genre = "Old music") %>%
+  bind_rows(new_timbre %>% mutate(genre = "New music"),
+            experimental_timbre %>% mutate(genre = "Experimental music"))
+
+musics %>%
+  mutate(
+    timbre =
+      map(
+        segments,
+        compmus_summarise,
+        timbre,
+        method = "mean"
+      )
+  ) %>%
+  select(genre, timbre) %>%
+  compmus_gather_timbre() %>%
+  ggplot(aes(x = basis, y = value, fill = genre, color = genre)) +
+  geom_violin(alpha = 0.8) +
+  theme_linedraw() +
+  scale_fill_brewer(palette = "Dark2") +
+  scale_color_brewer(palette = "Dark2") +
+  labs(x = "Spotify Timbre Coefficients", y = "", fill = "Category",
+       title = "Timbre changes") +
+  theme(text = element_text(family = "mono")) +
+  guides(color = "none")
+
+```
+
+***
+
+*Need to add information*
+
+
 ### **Pitch based self-similarity matrices** for popular and not so popular songs
 ```{r}
   cyfmh <-
@@ -932,6 +813,385 @@ grid.arrange(cyfmhplot_selfsimp, kingslayerplot_selfsimp,
 ***
 
 These are **pitch based self-similarity matrices** for some of Bring Me The Horizons most popular songs (*Can You Feel My Heart* and *Kingslayer (feat. BABYMETAL)*) and some of their least popular songs (*Liquor & Love Lost* and *A Lot Like Vegas*).
+
+*Need to add more information*
+
+### **Chordograms** for BMTH's singles
+
+
+```{r, fig.width = 12, fig.height = 10}
+  circshift <- function(v, n) {
+    if (n == 0) v else c(tail(v, n), head(v, -n))
+  }
+
+#      C     C#    D     Eb    E     F     F#    G     Ab    A     Bb    B
+major_chord <-
+  c(   1,    0,    0,    0,    1,    0,    0,    1,    0,    0,    0,    0)
+minor_chord <-
+  c(   1,    0,    0,    1,    0,    0,    0,    1,    0,    0,    0,    0)
+seventh_chord <-
+  c(   1,    0,    0,    0,    1,    0,    0,    1,    0,    0,    1,    0)
+
+
+chord_templates <-
+  tribble(
+    ~name, ~template,
+    "Gb:7", circshift(seventh_chord, 6),
+    "Gb:maj", circshift(major_chord, 6),
+    "Bb:min", circshift(minor_chord, 10),
+    "Db:maj", circshift(major_chord, 1),
+    "F:min", circshift(minor_chord, 5),
+    "Ab:7", circshift(seventh_chord, 8),
+    "Ab:maj", circshift(major_chord, 8),
+    "C:min", circshift(minor_chord, 0),
+    "Eb:7", circshift(seventh_chord, 3),
+    "Eb:maj", circshift(major_chord, 3),
+    "G:min", circshift(minor_chord, 7),
+    "Bb:7", circshift(seventh_chord, 10),
+    "Bb:maj", circshift(major_chord, 10),
+    "D:min", circshift(minor_chord, 2),
+    "F:7", circshift(seventh_chord, 5),
+    "F:maj", circshift(major_chord, 5),
+    "A:min", circshift(minor_chord, 9),
+    "C:7", circshift(seventh_chord, 0),
+    "C:maj", circshift(major_chord, 0),
+    "E:min", circshift(minor_chord, 4),
+    "G:7", circshift(seventh_chord, 7),
+    "G:maj", circshift(major_chord, 7),
+    "B:min", circshift(minor_chord, 11),
+    "D:7", circshift(seventh_chord, 2),
+    "D:maj", circshift(major_chord, 2),
+    "F#:min", circshift(minor_chord, 6),
+    "A:7", circshift(seventh_chord, 9),
+    "A:maj", circshift(major_chord, 9),
+    "C#:min", circshift(minor_chord, 1),
+    "E:7", circshift(seventh_chord, 4),
+    "E:maj", circshift(major_chord, 4),
+    "G#:min", circshift(minor_chord, 8),
+    "B:7", circshift(seventh_chord, 11),
+    "B:maj", circshift(major_chord, 11),
+    "D#:min", circshift(minor_chord, 3)
+  )
+
+ludens <-
+  get_tidy_audio_analysis("4xWirulal0kGikFE3WSU75") %>%
+  compmus_align(sections, segments) %>%
+  select(sections) %>%
+  unnest(sections) %>%
+  mutate(
+    pitches =
+      map(segments,
+          compmus_summarise, pitches,
+          method = "mean", norm = "manhattan"
+      )
+  ) 
+
+ludensplot_chord <- ludens %>% 
+  compmus_match_pitch_template(
+    chord_templates,         # Change to chord_templates if descired
+    method = "euclidean",  # Try different distance metrics
+    norm = "chebyshev"     # Try different norms
+  ) %>%
+  ggplot(
+    aes(x = start + duration / 2, width = duration, y = name, fill = d)
+  ) +
+  geom_tile() +
+  scale_fill_viridis_c(guide = "none") +
+  theme_minimal() +
+  labs(x = "Time (s)", y = "", title = "Ludens") +
+  theme(text = element_text(family = "mono")) +
+  theme(axis.text.y = element_text(size = 11),
+        axis.text.x = element_text(size = 11),
+        plot.title = element_text(size = 18))
+
+mantra <-
+  get_tidy_audio_analysis("060RNnzoMay3wKJek1faPc") %>%
+  compmus_align(sections, segments) %>%
+  select(sections) %>%
+  unnest(sections) %>%
+  mutate(
+    pitches =
+      map(segments,
+          compmus_summarise, pitches,
+          method = "mean", norm = "manhattan"
+      )
+  ) 
+
+mantraplot_chord <- mantra %>% 
+  compmus_match_pitch_template(
+    chord_templates,         # Change to chord_templates if descired
+    method = "euclidean",  # Try different distance metrics
+    norm = "chebyshev"     # Try different norms
+  ) %>%
+  ggplot(
+    aes(x = start + duration / 2, width = duration, y = name, fill = d)
+  ) +
+  geom_tile() +
+  scale_fill_viridis_c(guide = "none") +
+  theme_minimal() +
+  labs(x = "Time (s)", y = "", title = "MANTRA") +
+  theme(text = element_text(family = "mono")) +
+  theme(axis.text.y = element_text(size = 11),
+        axis.text.x = element_text(size = 11),
+        plot.title = element_text(size = 18))
+
+
+drown <-
+  get_tidy_audio_analysis("6o39Ln9118FKTMbM4BvcEy") %>%
+  compmus_align(sections, segments) %>%
+  select(sections) %>%
+  unnest(sections) %>%
+  mutate(
+    pitches =
+      map(segments,
+          compmus_summarise, pitches,
+          method = "mean", norm = "manhattan"
+      )
+  ) 
+
+drownplot_chord <- drown %>% 
+  compmus_match_pitch_template(
+    chord_templates,         # Change to chord_templates if descired
+    method = "euclidean",  # Try different distance metrics
+    norm = "chebyshev"     # Try different norms
+  ) %>%
+  ggplot(
+    aes(x = start + duration / 2, width = duration, y = name, fill = d)
+  ) +
+  geom_tile() +
+  scale_fill_viridis_c(guide = "none") +
+  theme_minimal() +
+  labs(x = "Time (s)", y = "", title = "Drown") +
+  theme(text = element_text(family = "mono")) +
+  theme(axis.text.y = element_text(size = 11),
+        axis.text.x = element_text(size = 11),
+        plot.title = element_text(size = 18))
+
+shadowmoses <-
+  get_tidy_audio_analysis("68osIGtVjM7QWVe6pazLHj") %>%
+  compmus_align(sections, segments) %>%
+  select(sections) %>%
+  unnest(sections) %>%
+  mutate(
+    pitches =
+      map(segments,
+          compmus_summarise, pitches,
+          method = "mean", norm = "manhattan"
+      )
+  ) 
+
+shadowmosesplot_chord <- shadowmoses %>% 
+  compmus_match_pitch_template(
+    chord_templates,         # Change to chord_templates if descired
+    method = "euclidean",  # Try different distance metrics
+    norm = "chebyshev"     # Try different norms
+  ) %>%
+  ggplot(
+    aes(x = start + duration / 2, width = duration, y = name, fill = d)
+  ) +
+  geom_tile() +
+  scale_fill_viridis_c(guide = "none") +
+  theme_minimal() +
+  labs(x = "Time (s)", y = "", title = "Shadow Moses") +
+  theme(text = element_text(family = "mono")) +
+  theme(axis.text.y = element_text(size = 11),
+        axis.text.x = element_text(size = 11),
+        plot.title = element_text(size = 18))
+
+chelseasmile <-
+  get_tidy_audio_analysis("2C5jGbR23YLonV7Lton6fV") %>%
+  compmus_align(sections, segments) %>%
+  select(sections) %>%
+  unnest(sections) %>%
+  mutate(
+    pitches =
+      map(segments,
+          compmus_summarise, pitches,
+          method = "mean", norm = "manhattan"
+      )
+  ) 
+
+chelseasmileplot_chord <- chelseasmile %>% 
+  compmus_match_pitch_template(
+    chord_templates,         # Change to chord_templates if descired
+    method = "euclidean",  # Try different distance metrics
+    norm = "chebyshev"     # Try different norms
+  ) %>%
+  ggplot(
+    aes(x = start + duration / 2, width = duration, y = name, fill = d)
+  ) +
+  geom_tile() +
+  scale_fill_viridis_c(guide = "none") +
+  theme_minimal() +
+  labs(x = "Time (s)", y = "", title = "Chelsea Smile") +
+  theme(text = element_text(family = "mono")) +
+  theme(axis.text.y = element_text(size = 11),
+        axis.text.x = element_text(size = 11),
+        plot.title = element_text(size = 18))
+
+prayforplagues <-
+  get_tidy_audio_analysis("0zYxfgyqypkG7rRwFqyisT") %>%
+  compmus_align(sections, segments) %>%
+  select(sections) %>%
+  unnest(sections) %>%
+  mutate(
+    pitches =
+      map(segments,
+          compmus_summarise, pitches,
+          method = "mean", norm = "manhattan"
+      )
+  ) 
+
+prayforplaguesplot_chord <- prayforplagues %>% 
+  compmus_match_pitch_template(
+    chord_templates,         # Change to chord_templates if descired
+    method = "euclidean",  # Try different distance metrics
+    norm = "chebyshev"     # Try different norms
+  ) %>%
+  ggplot(
+    aes(x = start + duration / 2, width = duration, y = name, fill = d)
+  ) +
+  geom_tile() +
+  scale_fill_viridis_c(guide = "none") +
+  theme_minimal() +
+  labs(x = "Time (s)", y = "", title = "Pray For Plagues") +
+  theme(text = element_text(family = "mono")) +
+  theme(axis.text.y = element_text(size = 11),
+        axis.text.x = element_text(size = 11),
+        plot.title = element_text(size = 18))
+
+
+grid.arrange(prayforplaguesplot_chord, chelseasmileplot_chord, 
+             shadowmosesplot_chord,
+             drownplot_chord, mantraplot_chord, ludensplot_chord, 
+             nrow = 2, ncol = 3)
+
+
+
+
+
+```
+
+***
+
+These are **chordograms** for some of the singles of all of Bring Me The Horizons albums in the old and new music categories (the experimental catagory doesn't have any singles), arranged from oldest to newest (left to right, top to bottom). As you can see, there is a lot going on in all these songs. When listening to the music you can easily follow along in the chordograms. Loud percussion and distorted guitar sounds can make for **bright yellow lines**, like the one around 70 seconds in *Shadow Moses*. Considering this, it is clearly visible that Bring Me The Horizon keep using this a lot in their music over time. It is interesting to see that the screaming in *Pray For Plagues* leads to less intense recognition of chords, but does not necessarily create the bright yellow areas mentioned before. 
+
+When comparing the songs to see what happened to BMTH's music over time, you could say that **their music has become more varied**. The older songs have a simpler pattern than the newer songs, which have a lot of changes in them.
+
+### Changes in **modes** throughout Bring Me The Horizon's albums
+
+```{r}
+countyourblessings <- get_playlist_audio_features("", "5g3g42cSz7CD9N8jBke8Mv") 
+suicideseason <- get_playlist_audio_features("", "2BekaQ22m23SamNwMkPlHp")
+thereisahell <- get_playlist_audio_features("", "6cBZUEnYzMSShmBAT4wEpt")
+sempiternal <- get_playlist_audio_features("", "3rayBGVtjJGtPsCkYuSvY6")
+thatsthespirit <- get_playlist_audio_features("", "2jDKuQ5L6dxxwnHs7AtfES")
+amo <- get_playlist_audio_features("", "1bAINMU0FyqBlQshd05GTw")
+musictolistento <- get_playlist_audio_features("", "79mN8Vyk4kVE7Hsz0WDEB9")
+survivalhorror <- get_playlist_audio_features("", "4TWnbh3rXy3BMDXdpcnGun")
+
+
+
+modelabels <- c("Minor", "Major")
+
+cyb_modes <- ggplot(countyourblessings, aes(mode, color = mode)) +
+  geom_bar() +
+  scale_color_manual(values = c("pink", "blue")) +
+  scale_x_discrete(breaks = c("0", "1"),
+                    labels = c("Minor", "Major"),
+                   limits = factor(-0.5, 1.5)) +
+  theme(text = element_text(family = "mono")) +
+  labs(x = "MINOR / MAJOR", title = "Count Your Blessings") +
+  theme(plot.title = element_text(size = 7.5)) +
+  theme(axis.title.x = element_text(size = 9))
+
+suisea_modes <- ggplot(suicideseason, aes(mode, color = mode)) +
+  geom_bar() +
+  scale_color_manual(values = c("pink", "blue")) +
+  scale_x_discrete(breaks = c("0", "1"),
+                   labels = c("Minor", "Major"),
+                   limits = factor(-0.5, 1.5)) +
+  theme(text = element_text(family = "mono")) +
+  labs(x = "MINOR / MAJOR", title = "Suicide Season")+
+  theme(plot.title = element_text(size = 8)) +
+  theme(axis.title.x = element_text(size = 9))
+
+ahell_modes <- ggplot(thereisahell, aes(mode, color = mode)) +
+  geom_bar() +
+  scale_color_manual(values = c("pink", "blue")) +
+  scale_x_discrete(breaks = c("0", "1"),
+                   labels = c("Minor", "Major"),
+                   limits = factor(-0.5, 1.5)) +
+  theme(text = element_text(family = "mono")) +
+  labs(x = "MINOR / MAJOR", title = "There is a Hell...") +
+  theme(plot.title = element_text(size = 8)) +
+  theme(axis.title.x = element_text(size = 9))
+
+sempi_modes <- ggplot(sempiternal, aes(mode, color = mode)) +
+  geom_bar() +
+  scale_color_manual(values = c("pink", "blue")) +
+  scale_x_discrete(breaks = c("0", "1"),
+                   labels = c("Minor", "Major"),
+                   limits = factor(-0.5, 1.5)) +
+  theme(text = element_text(family = "mono")) +
+  labs(x = "MINOR / MAJOR", title = "Sempiternal") +
+  theme(plot.title = element_text(size = 8)) +
+  theme(axis.title.x = element_text(size = 9))
+
+spirit_modes <- ggplot(thatsthespirit, aes(mode, color = mode)) +
+  geom_bar() +
+  scale_color_manual(values = c("pink", "blue")) +
+  scale_x_discrete(breaks = c("0", "1"),
+                   labels = c("Minor", "Major"),
+                   limits = factor(-0.5, 1.5)) +
+  theme(text = element_text(family = "mono")) +
+  labs(x = "MINOR / MAJOR", title = "That's The Spirit") +
+  theme(plot.title = element_text(size = 8)) +
+  theme(axis.title.x = element_text(size = 9))
+
+amo_modes <- ggplot(amo, aes(mode, color = mode)) +
+  geom_bar() +
+  scale_color_manual(values = c("pink", "blue")) +
+  scale_x_discrete(breaks = c("0", "1"),
+                   labels = c("Minor", "Major"),
+                   limits = factor(-0.5, 1.5)) +
+  theme(text = element_text(family = "mono")) +
+  labs(x = "MINOR / MAJOR", title = "amo") +
+  theme(plot.title = element_text(size = 8)) +
+  theme(axis.title.x = element_text(size = 9))
+
+listento_modes <-ggplot(musictolistento, aes(mode, color = mode)) +
+  geom_bar() +
+  scale_color_manual(values = c("pink", "blue")) +
+  scale_x_discrete(breaks = c("0", "1"),
+                   labels = c("Minor", "Major"),
+                   limits = factor(-0.5, 1.5)) +
+  theme(text = element_text(family = "mono")) +
+  labs(x = "MINOR / MAJOR", title = "Music to listen to~") +
+  theme(plot.title = element_text(size = 8)) +
+  theme(axis.title.x = element_text(size = 9))
+
+survival_modes <- ggplot(survivalhorror, aes(mode, fill = mode)) +
+  geom_bar() +
+  scale_fill_gradient(low = "black", high = "red") +
+  scale_x_discrete(breaks = c("0", "1"),
+                   labels = c("Minor", "Major"),
+                   limits = factor(-0.5, 1.5)) +
+  theme(text = element_text(family = "mono")) +
+  labs(x = "MINOR / MAJOR", title = "POST HUMAN") +
+  theme(plot.title = element_text(size = 8)) +
+  theme(axis.title.x = element_text(size = 9))
+
+grid.arrange(cyb_modes, suisea_modes, ahell_modes, sempi_modes,
+             spirit_modes, amo_modes, listento_modes, survival_modes,
+             nrow = 2, ncol = 4)
+
+```
+
+***
+
+In their first two albums, the music is mostly in a major mode. The proportions suddenly flip around for *There is a Hell...*, seem so even out a bit again for *Sempiternal*, but the minor mode strongly overpowers again in their next couple albums (though it seems that there are more and more major songs coming with each album). Unlike a lot of other data shows, there are no great differences in *Music to listen to~*. *POST HUMAN: SURVIVAL HORROR* seems to go back towards the ratios of *Sempiternal* a bit more, although mirrored.
+
 
 Conclusion
 =============================================================================
