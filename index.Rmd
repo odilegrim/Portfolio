@@ -134,7 +134,14 @@ oldvsnew <-
     experimental %>% mutate(category = "Experimental")
   )
 
-differentstyles <- ggplot(oldvsnew, 
+oldvsnew_order <- oldvsnew                             
+oldvsnew_order$category <- factor(oldvsnew_order$category,     
+                         levels = c("Old music", 
+                                    "New music", 
+                                    "Experimental"))
+
+
+differentstyles <- ggplot(oldvsnew_order, 
                           aes(x = valence, y = energy, color = speechiness, size = danceability)) +
   geom_jitter(alpha = 0.5) +
   facet_wrap(~category) +
@@ -1192,6 +1199,40 @@ grid.arrange(cyb_modes, suisea_modes, ahell_modes, sempi_modes,
 
 In their first two albums, the music is mostly in a major mode. The proportions suddenly flip around for *There is a Hell...*, seem so even out a bit again for *Sempiternal*, but the minor mode strongly overpowers again in their next couple albums (though it seems that there are more and more major songs coming with each album). Unlike a lot of other data shows, there are no great differences in *Music to listen to~*. *POST HUMAN: SURVIVAL HORROR* seems to go back towards the ratios of *Sempiternal* a bit more, although mirrored.
 
+### How **keys** and **modes** change throughout Bring Me The Horizon's music
+
+```{r}
+oldvsnew_order <- oldvsnew                             
+oldvsnew_order$category <- factor(oldvsnew_order$category,     
+                         levels = c("Old music", 
+                                    "New music", 
+                                    "Experimental"))
+
+
+ggplot(oldvsnew_order, aes(factor(key), fill = factor(mode))) +
+  geom_bar(position = "stack", alpha = 0.9) +
+  theme_linedraw() +
+  scale_fill_manual(labels = c("Minor", "Major"),
+                    values = c("#ea6241", "#336bff")) +
+  scale_x_discrete(breaks = c("0", "1", "2", "3", "4", "5", 
+                              "6", "7", "8", "9", "10", "11"),
+                   labels = c("C","C#", "D", "D#",
+                              "E", "F", "F#", "G", "G#",
+                              "A", "A#", "B"),
+                   limits = c("0", "1", "2", "3", "4", "5", 
+                              "6", "7", "8", "9", "10", "11")) +
+  labs(y = "Count", x = "Key", 
+       fill = "Mode", 
+       title = "Keys and modes throughout BMTH's music") +
+  theme(text = element_text(family = "mono"),
+        axis.text.x = element_text(size = 7)) +
+  facet_grid(~ category)
+
+```
+
+***
+
+This graph shows the keys and modes for the different categories I have divided Bring Me The Horizon's music into. It is remarkable, that - even though their new music can generally be classified as happier and more positive, as we've seen earlier - we see more minor modes in that category than in their old, sadder and angrier music. Their least favourite key seems to be D# (in either mode really) and most of their songs seem to be in C, C# and G for both their old and new music. Their old music also focuses a bit more on G# major. For their experimental music, however, they focus on a key that is not very common in the rest of their repertoire, which is D. Mostly D major, while most of that music is in the minor mode. The only thing that can not be derived from Spotify's information, is whether they use sharps (#) or flats (♭).
 
 Conclusion
 =============================================================================
