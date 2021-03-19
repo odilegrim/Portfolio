@@ -1,7 +1,7 @@
 ---
-title: "Portfolio Computational Musicology"
+title: "The changes in Bring Me The Horizon's repertoire"
 author: "Odile Grim"
-date: "March 2021"
+date: "March 2021" 
 output: 
   flexdashboard::flex_dashboard:
     theme: journal
@@ -13,96 +13,130 @@ library(ggplot2)
 library(tidyverse)
 library(compmus)
 library(gridExtra)
+library(kknn)
+library(tidymodels)
+library(ggdendro)
+library(heatmaply)
+library(protoclust)
+library(cluster)
+
+get_conf_mat <- function(fit) {
+  outcome <- .get_tune_outcome_names(fit)
+  fit %>% 
+    collect_predictions() %>% 
+    conf_mat(truth = outcome, estimate = .pred_class)
+}  
+
+get_pr <- function(fit) {
+  fit %>% 
+    conf_mat_resampled() %>% 
+    group_by(Prediction) %>% mutate(precision = Freq / sum(Freq)) %>% 
+    group_by(Truth) %>% mutate(recall = Freq / sum(Freq)) %>% 
+    ungroup() %>% filter(Prediction == Truth) %>% 
+    select(class = Prediction, precision, recall)
+}  
+
+cache = TRUE
+
+
 ```
 
 
 
-**Homework week 10** {.storyboard}
+**Homework week 11**  {.storyboard}
 =======================================================
 
-
-### **Tempo analysis** for Bring Me The Horizon's repertoire
+### **Classification** 
 
 ```{r}
 old <- get_playlist_audio_features("", "6oeRMX8XZ8IS7MCDb6Z1BG")
 new <- get_playlist_audio_features("", "4k98rVhcCw54dhLaUMiyLK")
 experimental <- get_playlist_audio_features("", "1EIpRI9TozVUiehlxAmmHq")
 
-oldvsnew <-
+oldvsnew_classification <-
   bind_rows(
-    old %>% mutate(category = "Old music"),
-    new %>% mutate(category = "New music"),
-    experimental %>% mutate(category = "Experimental")
-  )
+    old %>% mutate(playlist = "Old") %>% slice_head(n = 30),
+    new %>% mutate(playlist = "New") %>% slice_head(n = 30),
+    experimental %>% mutate(playlist = "Experimental") %>% slice_head(n = 30)
+  ) 
 
-ggplot(oldvsnew, aes(track.album.name, tempo, color = category)) +
-  geom_point(size = 3, alpha = 0.6) +
-  theme_linedraw() +
-  scale_color_brewer(palette = "Dark2") +
-  scale_x_discrete(breaks = c("Count Your Blessings",
-                              "Suicide Season",
-                              "There is a Hell Believe Me I've Seen It. There is a Heaven Let's Keep it a Secret",
-                              "Sempiternal (Expanded Edition)",
-                              "That's The Spirit",
-                              "amo",
-                              "Music to listen to~dance to~blaze to~pray to~feed to~sleep to~talk to~grind to~trip to~breathe to~help to~hurt to~scroll to~roll to~love to~hate to~learn Too~plot to~play to~be to~feel to~breed to~sweat to~dream to~hide to~live to~die to~GO TO",
-                              "POST HUMAN: SURVIVAL HORROR"),
-                   labels = c("Count Your Blessings",
-                              "Suicide Season", 
-                              "There is a Hell...",
-                              "Sempiternal",
-                              "That's The Spirit",
-                              "amo",
-                              "Music to listen to~",
-                              "POST HUMAN"),
-                   limits = c("Count Your Blessings",
-                              "Suicide Season",
-                              "There is a Hell Believe Me I've Seen It. There is a Heaven Let's Keep it a Secret",
-                              "Sempiternal (Expanded Edition)",
-                              "That's The Spirit",
-                              "amo",
-                              "Music to listen to~dance to~blaze to~pray to~feed to~sleep to~talk to~grind to~trip to~breathe to~help to~hurt to~scroll to~roll to~love to~hate to~learn Too~plot to~play to~be to~feel to~breed to~sweat to~dream to~hide to~live to~die to~GO TO",
-                              "POST HUMAN: SURVIVAL HORROR")
-  ) +
-  theme(text = element_text(family = "mono")) +
-  theme(axis.text.x = element_text(angle = 60, hjust = 1, size = 8)) +
-  theme(axis.title.x = element_blank()) +
-  labs(y = "Tempo (BPM)", title = "Tempo for BMTH's music", color = "Category") +
-  stat_summary(
-    geom = "point",
-    fun = "mean",
-    col = "darkred",
-    size = 7,
-    shape = 21,
-    fill = "pink",
-    alpha = 0.5
-  ) +
-  stat_summary(aes(group = 1), 
-               fun = mean, 
-               geom = "line", 
-               colour = "darkred",
-               alpha = 0.3) 
 
+oldvsnew_features <-
+  oldvsnew_classification %>%  # For your portfolio, change this to the name of your corpus.
+  add_audio_analysis() %>% 
+  mutate(
+    playlist = factor(playlist),
+    segments = map2(segments, key, compmus_c_transpose),
+    pitches =
+      map(
+        segments,
+        compmus_summarise, pitches,
+        method = "mean", norm = "manhattan"
+      ),
+    timbre =
+      map(
+        segments,
+        compmus_summarise, timbre,
+        method = "mean",
+      )
+  ) %>%
+  mutate(pitches = map(pitches, compmus_normalise, "clr")) %>%
+  mutate_at(vars(pitches, timbre), map, bind_rows) %>%
+  unnest(cols = c(pitches, timbre))
 
 ```
-
-***
-
-This plot displays the tempo in beats per minute for Bring Me The Horizon's entire repertoire, the albums are sorted by their release date and each dot represents a song. The bigger red/pink circles represent the **mean tempo for each album**. It is interesting to see that their old music has the lowest tempo and it starts climbing up when their music starts to drift away from the "metalcore" genre. In their newer music the mean line almost seems to be coherent with the means of popularity for these albums.
-
-### **Tempograms**
 
 ```{r}
+oldvsnew_recipe <-
+  recipe(
+    playlist ~
+      energy +
+     valence +
+      duration +
+      c01 + c02 + c03 + c04 + c05 + c06 +
+      c07 + c08 + c09 + c10 + c11 + c12,
+    data = oldvsnew_features,          # Use the same name as the previous block.
+  ) %>%
+  step_center(all_predictors()) %>%
+  step_scale(all_predictors())      # Converts to z-scores.
+  # step_range(all_predictors())    # Sets range to [0, 1].
 
-"my laptop is failing me and can't make the tempograms"
 ```
 
-***
+```{r}
+oldvsnew_cv <- oldvsnew_features %>% vfold_cv(5)
+
+
+knn_model <-
+  nearest_neighbor(neighbors = 1) %>%
+  set_mode("classification") %>% 
+  set_engine("kknn")
+oldvsnew_knn <- 
+  workflow() %>% 
+  add_recipe(oldvsnew_recipe) %>% 
+  add_model(knn_model) %>% 
+  fit_resamples(
+    oldvsnew_cv, 
+    control = control_resamples(save_pred = TRUE)
+  )
+
+
+ oldvsnew_knn %>% get_conf_mat() %>% autoplot(type = "mosaic")
 
 
 
 
-**Introduction**
+```
+
+*** 
+Here I have trained a classifier to distinguish between the three different categories I divided Bring Me The Horizon's music into. After trying different combinations, I figured out that **energy, valence, duration and all of the timbre components** are the most useful features for computational recognition of this corpus. The **keys** generally confused the classifier the most and **duration** seemed to influence the experimental category the most (significantly fewer songs were classified correctly). As you can see in the mosaic plot, **most of the music is classified in the right category**. It is important to mention that for both old and new 30 songs were used, but there are only eight experimental songs. Considering this, it's quite remarkable that five out of those eight are classified correctly here.
+
+The precision rates are very high for all of the categories, 83% for experimental music, 82% for new music and even 96% for old music. The categories I divided the music into are thus very distinguishable from each other, especially when filtering out the right elements (even without doing this the scores are still relatively high).
+
+
+
+
+**Introduction** 
 ===============================================================
 
 ### **What my analysis is about**
@@ -113,7 +147,7 @@ I definitely think that BMTH's music after 2013 has changed significantly compar
 ### .........................................................................................................................................................................................................................................................................................................................................
 ![](https://www.impericon-mag.com/nl/wp-content/uploads/sites/7/2020/10/bringmethehorizon.jpg)
 
-**Analysis** {.storyboard}
+**Analysis** {.storyboard} 
 =============================================================
 
 ### **First things first**: Different music styles over the years compared
@@ -1234,7 +1268,77 @@ ggplot(oldvsnew_order, aes(factor(key), fill = factor(mode))) +
 
 This graph shows the keys and modes for the different categories I have divided Bring Me The Horizon's music into. It is remarkable, that - even though their new music can generally be classified as happier and more positive, as we've seen earlier - we see more minor modes in that category than in their old, sadder and angrier music. Their least favourite key seems to be D# (in either mode really) and most of their songs seem to be in C, C# and G for both their old and new music. Their old music also focuses a bit more on G# major. For their experimental music, however, they focus on a key that is not very common in the rest of their repertoire, which is D. Mostly D major, while most of that music is in the minor mode. The only thing that can not be derived from Spotify's information, is whether they use sharps (#) or flats (♭).
 
-Conclusion
+### **Tempo analysis** for Bring Me The Horizon's repertoire
+
+```{r}
+old <- get_playlist_audio_features("", "6oeRMX8XZ8IS7MCDb6Z1BG")
+new <- get_playlist_audio_features("", "4k98rVhcCw54dhLaUMiyLK")
+experimental <- get_playlist_audio_features("", "1EIpRI9TozVUiehlxAmmHq")
+
+oldvsnew <-
+  bind_rows(
+    old %>% mutate(category = "Old music"),
+    new %>% mutate(category = "New music"),
+    experimental %>% mutate(category = "Experimental")
+  )
+
+ggplot(oldvsnew, aes(track.album.name, tempo, color = category)) +
+  geom_point(size = 3, alpha = 0.6) +
+  theme_linedraw() +
+  scale_color_brewer(palette = "Dark2") +
+  scale_x_discrete(breaks = c("Count Your Blessings",
+                              "Suicide Season",
+                              "There is a Hell Believe Me I've Seen It. There is a Heaven Let's Keep it a Secret",
+                              "Sempiternal (Expanded Edition)",
+                              "That's The Spirit",
+                              "amo",
+                              "Music to listen to~dance to~blaze to~pray to~feed to~sleep to~talk to~grind to~trip to~breathe to~help to~hurt to~scroll to~roll to~love to~hate to~learn Too~plot to~play to~be to~feel to~breed to~sweat to~dream to~hide to~live to~die to~GO TO",
+                              "POST HUMAN: SURVIVAL HORROR"),
+                   labels = c("Count Your Blessings",
+                              "Suicide Season", 
+                              "There is a Hell...",
+                              "Sempiternal",
+                              "That's The Spirit",
+                              "amo",
+                              "Music to listen to~",
+                              "POST HUMAN"),
+                   limits = c("Count Your Blessings",
+                              "Suicide Season",
+                              "There is a Hell Believe Me I've Seen It. There is a Heaven Let's Keep it a Secret",
+                              "Sempiternal (Expanded Edition)",
+                              "That's The Spirit",
+                              "amo",
+                              "Music to listen to~dance to~blaze to~pray to~feed to~sleep to~talk to~grind to~trip to~breathe to~help to~hurt to~scroll to~roll to~love to~hate to~learn Too~plot to~play to~be to~feel to~breed to~sweat to~dream to~hide to~live to~die to~GO TO",
+                              "POST HUMAN: SURVIVAL HORROR")
+  ) +
+  theme(text = element_text(family = "mono")) +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1, size = 8)) +
+  theme(axis.title.x = element_blank()) +
+  labs(y = "Tempo (BPM)", title = "Tempo for BMTH's music per album", color = "Category") +
+  stat_summary(
+    geom = "point",
+    fun = "mean",
+    col = "darkred",
+    size = 7,
+    shape = 21,
+    fill = "pink",
+    alpha = 0.5
+  ) +
+  stat_summary(aes(group = 1), 
+               fun = mean, 
+               geom = "line", 
+               colour = "darkred",
+               alpha = 0.3) 
+
+
+```
+
+***
+
+This plot displays the tempo in beats per minute for Bring Me The Horizon's entire repertoire, the albums are sorted by their release date and each dot represents a song. The bigger red/pink circles represent the **mean tempo for each album**. It is interesting to see that their old music has the lowest tempo and it starts climbing up when their music starts to drift away from the "metalcore" genre. In their newer music the mean line almost seems to be coherent with the means of popularity for these albums.
+
+
+Conclusion 
 =============================================================================
 
 *Coming soon...*
