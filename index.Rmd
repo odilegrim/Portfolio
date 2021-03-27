@@ -1,11 +1,74 @@
 ---
-title: "The changes in Bring Me The Horizon's repertoire"
+title: "Bring Me The Horizon's changing repertoire"
 author: "Odile Grim"
 date: "March 2021" 
 output: 
   flexdashboard::flex_dashboard:
     theme: journal
 ---
+<style>                     
+.navbar {
+  color:#390a61;
+  background-color:#7540a1;
+  border-color:black;
+}
+.navbar-brand {
+color:white!important;
+}
+.navbar-inverse .navbar-nav > li > a:hover,
+.navbar-inverse .navbar-nav > li > a:focus {
+    background-color: #72b7cc;
+    color: white;
+}
+.navbar-inverse .navbar-nav > .active > a,
+.navbar-inverse .navbar-nav > .active > a:hover,
+.navbar-inverse .navbar-nav > .active > a:focus {
+  color: white;
+  background-color: #72b7cc;
+}
+.navbar-inverse .navbar-toggle:hover,
+.navbar-inverse .navbar-toggle:focus {
+  background-color: #72b7cc;
+}
+.navbar-inverse .navbar-collapse,
+.navbar-inverse .navbar-form {
+  border-color: #72b7cc;
+}
+.navbar-inverse .navbar-brand:hover,
+.navbar-inverse .navbar-brand:focus {
+  color: white;
+  background-color: #72b7cc;
+}
+.storyboard-nav .sbframelist ul li.active {
+  background-color:#7540a1;
+  hover-color:#7540a1;
+}
+.storyboard-nav .sbframelist ul li.hover {
+  background-color:#7540a1;
+  hover-color:#7540a1;
+}
+.dropdown-menu > li > a:hover,
+.dropdown-menu > li > a:focus,
+.dropdown-menu > li > a:active{
+    color: black;
+    text-decoration: none;
+    background-color: #72b7cc!important; 
+}
+.dropdown-menu > .active > a,
+.dropdown-menu > .active > a:hover,
+.dropdown-menu > .active > a:focus,
+.dropdown-menu > .active > a:active {
+  color:white;
+  background-color:#72b7cc!important;
+}
+.dropdown-menu > .disabled > a,
+.dropdown-menu > .disabled > a:hover,
+.dropdown-menu > .disabled > a:focus {
+  color: #72b7cc;
+}
+
+</style>                    
+
 ```{r}
 library(plotly)
 library(spotifyr)
@@ -43,100 +106,8 @@ cache = TRUE
 
 
 
-**Homework week 11**  {.storyboard}
-=======================================================
 
-### **Classification** 
-
-```{r}
-old <- get_playlist_audio_features("", "6oeRMX8XZ8IS7MCDb6Z1BG")
-new <- get_playlist_audio_features("", "4k98rVhcCw54dhLaUMiyLK")
-experimental <- get_playlist_audio_features("", "1EIpRI9TozVUiehlxAmmHq")
-
-oldvsnew_classification <-
-  bind_rows(
-    old %>% mutate(playlist = "Old") %>% slice_head(n = 30),
-    new %>% mutate(playlist = "New") %>% slice_head(n = 30),
-    experimental %>% mutate(playlist = "Experimental") %>% slice_head(n = 30)
-  ) 
-
-
-oldvsnew_features <-
-  oldvsnew_classification %>%  # For your portfolio, change this to the name of your corpus.
-  add_audio_analysis() %>% 
-  mutate(
-    playlist = factor(playlist),
-    segments = map2(segments, key, compmus_c_transpose),
-    pitches =
-      map(
-        segments,
-        compmus_summarise, pitches,
-        method = "mean", norm = "manhattan"
-      ),
-    timbre =
-      map(
-        segments,
-        compmus_summarise, timbre,
-        method = "mean",
-      )
-  ) %>%
-  mutate(pitches = map(pitches, compmus_normalise, "clr")) %>%
-  mutate_at(vars(pitches, timbre), map, bind_rows) %>%
-  unnest(cols = c(pitches, timbre))
-
-```
-
-```{r}
-oldvsnew_recipe <-
-  recipe(
-    playlist ~
-      energy +
-     valence +
-      duration +
-      c01 + c02 + c03 + c04 + c05 + c06 +
-      c07 + c08 + c09 + c10 + c11 + c12,
-    data = oldvsnew_features,          # Use the same name as the previous block.
-  ) %>%
-  step_center(all_predictors()) %>%
-  step_scale(all_predictors())      # Converts to z-scores.
-  # step_range(all_predictors())    # Sets range to [0, 1].
-
-```
-
-```{r}
-oldvsnew_cv <- oldvsnew_features %>% vfold_cv(5)
-
-
-knn_model <-
-  nearest_neighbor(neighbors = 1) %>%
-  set_mode("classification") %>% 
-  set_engine("kknn")
-oldvsnew_knn <- 
-  workflow() %>% 
-  add_recipe(oldvsnew_recipe) %>% 
-  add_model(knn_model) %>% 
-  fit_resamples(
-    oldvsnew_cv, 
-    control = control_resamples(save_pred = TRUE)
-  )
-
-
- oldvsnew_knn %>% get_conf_mat() %>% autoplot(type = "mosaic")
-
-
-
-
-```
-
-*** 
-Here I have trained a classifier to distinguish between the three different categories I divided Bring Me The Horizon's music into. After trying different combinations, I figured out that **energy, valence, duration and all of the timbre components** are the most useful features for computational recognition of this corpus. The **keys** generally confused the classifier the most and **duration** seemed to influence the experimental category the most (significantly fewer songs were classified correctly). As you can see in the mosaic plot, **most of the music is classified in the right category**. It is important to mention that for both old and new 30 songs were used, but there are only eight experimental songs. Considering this, it's quite remarkable that five out of those eight are classified correctly here.
-
-The precision rates are very high for all of the categories, 83% for experimental music, 82% for new music and even 96% for old music. The categories I divided the music into are thus very distinguishable from each other, especially when filtering out the right elements (even without doing this the scores are still relatively high).
-
-
-
-
-**Introduction** 
+**Introduction** {data-icon="fa-map-marker-alt"}
 ===============================================================
 
 ### **What my analysis is about**
@@ -147,10 +118,11 @@ I definitely think that BMTH's music after 2013 has changed significantly compar
 ### .........................................................................................................................................................................................................................................................................................................................................
 ![](https://www.impericon-mag.com/nl/wp-content/uploads/sites/7/2020/10/bringmethehorizon.jpg)
 
-**Analysis** {.storyboard} 
-=============================================================
 
-### **First things first**: Different music styles over the years compared
+**General** {.storyboard data-icon="fa-music" data-navmenu="Analysis"}
+=========================================================
+
+### **First things first**: Different music styles over the years compared {data-commentary-width=350}
 
 ```{r, fig.width = 8.4}
 library(tidyverse)
@@ -232,7 +204,7 @@ For this plot I have split Bring Me The Horizon's music into three different cat
   
 With the highest danceability score being 0.6 out of a possible maximum of 1, most of their music isn't very danceable, but their newer music generally scores higher. The speechiness seems to be higher with higher valence scores, but generally the music doesn't seem very speechy. Looking at all their work together, the music seems very energetic and seems to have progressed from negative and angry towards a more diverse and positive style, with almost a kind of "dip" back towards negativity in their experimental album. 
 
-### **Popularity** scores for all of BMTH's albums
+### **Popularity** scores for all of BMTH's albums {data-commentary-width=450}
 
 ```{r}
 
@@ -295,7 +267,10 @@ ggplot(oldvsnew_releasedate, aes(track.album.name, track.popularity,
 
 This plot shows the popularity scores for the songs on all of Bring Me The Horizon's albums, they are in order of their release date from oldest to most recent. The bigger transparent red/pink circles show the **mean popularity** for each album. It is easy to see that their older music is the least popular of all and *That's The Spirit* and *POST HUMAN: SURVIVAL HORROR* are their most popular albums. Considering the fact that their music style really started changing on *Sempiternal*, it is not weird to see that the popularity shoots upwards from that album on. Of course, the experimental album *Music to listen to~* creates a big dip in popularity, since it is completely different from what the band usually produces and is not widely liked by fans.
   
-### **Chromagram** for the **saddest** song in Bring Me The Horizon's repertoire
+**Chroma** {.storyboard data-icon="fa-music" data-navmenu="Analysis"}
+=========================================================
+
+### **Chromagram** for the **saddest** song in Bring Me The Horizon's repertoire {data-commentary-width=450}
 
 ```{r}
 library(spotifyr)
@@ -337,7 +312,7 @@ memorial %>%
 
 This is a chromagram of the song *Memorial*, which is, according to it's measurements of valence and energy, the **saddest** song in Bring Me The Horizon's entire repertoire. As you can see, the song is **quite repetitive** and has a few layers that really stand out. *Memorial* is an entirely instrumental song with a continuous underlying sound and is used in the album as a transition into the next track. There are clearly audible, and in the chromagram visible, **high and loud 'screeching' noises** in the song and a few notes that are softly and repeatedly being played throughout the song. The texture of the song is very simple and also very clearly repesented in this chromagram.
 
-### **Chromagram** for the **happiest** song in Bring Me The Horizon's repertoire
+### **Chromagram** for the **happiest** song in Bring Me The Horizon's repertoire {data-commentary-width=450}
 
 ```{r}
 library(spotifyr)
@@ -372,7 +347,11 @@ onebyone %>%
 ***
 This is a chromagram of the song *1x1 (feat. Nova Twins)*, which is, according to it's measurements of valence and energy, the **happiest** song in Bring Me The Horizon's entire repertoire. As you can see, this song is **all over the place**. The line of C#/Db stands out a little bit, with a higher magnitude overall. The song consists of heavy drums and guitar combined with electronic music and keyboard sounds, all accompanied by the singing voices of either Bring Me The Horizon's frontman Oliver Sykes or the featuring artist the Nova Twins. The only big visible thing that is happening here is at **around 160 seconds**, where the heavy instruments that support the rest of the song go quiet and we hear only a keyboard and a singing voice.
 
-### **Cepstrograms** for the most "average" songs
+
+**Timbre** {.storyboard data-icon="fa-music" data-navmenu="Analysis"}
+=========================================================
+
+### **Cepstrograms** for the most "average" songs {data-commentary-width=400}
 
 ```{r}
   library(spotifyr)
@@ -465,7 +444,7 @@ grid.arrange(swoeoplot, ouchplot, nrow = 2)
 
 These are cepstrograms for the songs that lay the closes to the average energy, valence and danceability in BMTH's old music (*Sleep With One Eye Open*) and new music (*Ouch*). Cepstrograms show how the distribution of timbre in the music. As you can see the cepstrograms both have more intensity in the bottom, but *Sleep With One Eye Open* is "squished down" even more than *Ouch*. Both songs have a focus on the c02 section and generally go up to c06. Even though both songs do not have a lot of intensity in c07 to 12, *Ouch* does seem to have a bit more intensity there than *Sleep With One Eye Open*. This shows that the timbre features of the songs are quite different from each other.
 
-### **Timbre based self-similarity matrices** for popular and not so popular songs
+### **Timbre based self-similarity matrices** for popular and not so popular songs {data-commentary-width=400}
 
 ```{r}
 cyfmh <-
@@ -631,7 +610,7 @@ grid.arrange(cyfmhplot_selfsim, kingslayerplot_selfsim,
 
 These are **timbre based self-similarity matrices** for some of Bring Me The Horizons most popular songs (*Can You Feel My Heart* and *Kingslayer (feat. BABYMETAL)*) and some of their least popular songs (*Liquor & Love Lost* and *A Lot Like Vegas*). A quick look at these figures shows you that the popular songs have **more distinct checkerboard patterns** in them, which shows that they are more homogenous. *A Lot Like Vegas* also has a checkerboard pattern in it, but one that is divided into bigger chunks. The popular songs are homogenous, but also **alternate more** between the different sections in the song, which could be a reason they are more popular. The **bright criss-crossing lines** indicate moments in the music that are different from everything else, *Liquor & Love Lost* does not seem to have a lot of those moments, which could be a reason the song is less well-liked. On the other hand, *A Lot Like Vegas* does seem to have quite a bit of those moments, so it is probably a combination with other factors. 
 
-### **Timbre** changes in categories
+### **Timbre** changes in categories {data-commentary-width=450}
 ```{r}
 old_timbre <-
   get_playlist_audio_features( "",
@@ -688,8 +667,10 @@ musics %>%
 
 *Need to add information*
 
+**Pitch & chords** {.storyboard data-icon="fa-music" data-navmenu="Analysis"}
+=========================================================
 
-### **Pitch based self-similarity matrices** for popular and not so popular songs
+### **Pitch based self-similarity matrices** for popular and not so popular songs {data-commentary-width=400}
 ```{r}
   cyfmh <-
   get_tidy_audio_analysis("0WSa1sucoNRcEeULlZVQXj") %>% # Change URI.
@@ -857,7 +838,7 @@ These are **pitch based self-similarity matrices** for some of Bring Me The Hori
 
 *Need to add more information*
 
-### **Chordograms** for BMTH's singles
+### **Chordograms** for BMTH's singles {data-commentary-width=400}
 
 
 ```{r, fig.width = 12, fig.height = 10}
@@ -1119,7 +1100,10 @@ These are **chordograms** for some of the singles of all of Bring Me The Horizon
 
 When comparing the songs to see what happened to BMTH's music over time, you could say that **their music has become more varied**. The older songs have a simpler pattern than the newer songs, which have a lot of changes in them.
 
-### Changes in **modes** throughout Bring Me The Horizon's albums
+**Keys & modes** {.storyboard data-icon="fa-music" data-navmenu="Analysis"}
+=========================================================
+
+### Changes in **modes** throughout Bring Me The Horizon's albums {data-commentary-width=350}
 
 ```{r}
 countyourblessings <- get_playlist_audio_features("", "5g3g42cSz7CD9N8jBke8Mv") 
@@ -1233,7 +1217,7 @@ grid.arrange(cyb_modes, suisea_modes, ahell_modes, sempi_modes,
 
 In their first two albums, the music is mostly in a major mode. The proportions suddenly flip around for *There is a Hell...*, seem so even out a bit again for *Sempiternal*, but the minor mode strongly overpowers again in their next couple albums (though it seems that there are more and more major songs coming with each album). Unlike a lot of other data shows, there are no great differences in *Music to listen to~*. *POST HUMAN: SURVIVAL HORROR* seems to go back towards the ratios of *Sempiternal* a bit more, although mirrored.
 
-### How **keys** and **modes** change throughout Bring Me The Horizon's music
+### How **keys** and **modes** change throughout Bring Me The Horizon's music {data-commentary-width=450}
 
 ```{r}
 oldvsnew_order <- oldvsnew                             
@@ -1268,7 +1252,10 @@ ggplot(oldvsnew_order, aes(factor(key), fill = factor(mode))) +
 
 This graph shows the keys and modes for the different categories I have divided Bring Me The Horizon's music into. It is remarkable, that - even though their new music can generally be classified as happier and more positive, as we've seen earlier - we see more minor modes in that category than in their old, sadder and angrier music. Their least favourite key seems to be D# (in either mode really) and most of their songs seem to be in C, C# and G for both their old and new music. Their old music also focuses a bit more on G# major. For their experimental music, however, they focus on a key that is not very common in the rest of their repertoire, which is D. Mostly D major, while most of that music is in the minor mode. The only thing that can not be derived from Spotify's information, is whether they use sharps (#) or flats (♭).
 
-### **Tempo analysis** for Bring Me The Horizon's repertoire
+**Tempo** {.storyboard data-icon="fa-music" data-navmenu="Analysis"}
+=========================================================
+
+### **Tempo analysis** for Bring Me The Horizon's repertoire {data-commentary-width=450}
 
 ```{r}
 old <- get_playlist_audio_features("", "6oeRMX8XZ8IS7MCDb6Z1BG")
@@ -1337,8 +1324,98 @@ ggplot(oldvsnew, aes(track.album.name, tempo, color = category)) +
 
 This plot displays the tempo in beats per minute for Bring Me The Horizon's entire repertoire, the albums are sorted by their release date and each dot represents a song. The bigger red/pink circles represent the **mean tempo for each album**. It is interesting to see that their old music has the lowest tempo and it starts climbing up when their music starts to drift away from the "metalcore" genre. In their newer music the mean line almost seems to be coherent with the means of popularity for these albums.
 
+**Classification** {.storyboard data-icon="fa-music" data-navmenu="Analysis"}
+=========================================================
 
-Conclusion 
+### **Classification** {data-commentary-width=450}
+
+```{r}
+old <- get_playlist_audio_features("", "6oeRMX8XZ8IS7MCDb6Z1BG")
+new <- get_playlist_audio_features("", "4k98rVhcCw54dhLaUMiyLK")
+experimental <- get_playlist_audio_features("", "1EIpRI9TozVUiehlxAmmHq")
+
+oldvsnew_classification <-
+  bind_rows(
+    old %>% mutate(playlist = "Old") %>% slice_head(n = 30),
+    new %>% mutate(playlist = "New") %>% slice_head(n = 30),
+    experimental %>% mutate(playlist = "Experimental") %>% slice_head(n = 30)
+  ) 
+
+
+oldvsnew_features <-
+  oldvsnew_classification %>%  # For your portfolio, change this to the name of your corpus.
+  add_audio_analysis() %>% 
+  mutate(
+    playlist = factor(playlist),
+    segments = map2(segments, key, compmus_c_transpose),
+    pitches =
+      map(
+        segments,
+        compmus_summarise, pitches,
+        method = "mean", norm = "manhattan"
+      ),
+    timbre =
+      map(
+        segments,
+        compmus_summarise, timbre,
+        method = "mean",
+      )
+  ) %>%
+  mutate(pitches = map(pitches, compmus_normalise, "clr")) %>%
+  mutate_at(vars(pitches, timbre), map, bind_rows) %>%
+  unnest(cols = c(pitches, timbre))
+
+```
+
+```{r}
+oldvsnew_recipe <-
+  recipe(
+    playlist ~
+      energy +
+     valence +
+      duration +
+      c01 + c02 + c03 + c04 + c05 + c06 +
+      c07 + c08 + c09 + c10 + c11 + c12,
+    data = oldvsnew_features,          # Use the same name as the previous block.
+  ) %>%
+  step_center(all_predictors()) %>%
+  step_scale(all_predictors())      # Converts to z-scores.
+  # step_range(all_predictors())    # Sets range to [0, 1].
+
+```
+
+```{r}
+oldvsnew_cv <- oldvsnew_features %>% vfold_cv(5)
+
+
+knn_model <-
+  nearest_neighbor(neighbors = 1) %>%
+  set_mode("classification") %>% 
+  set_engine("kknn")
+oldvsnew_knn <- 
+  workflow() %>% 
+  add_recipe(oldvsnew_recipe) %>% 
+  add_model(knn_model) %>% 
+  fit_resamples(
+    oldvsnew_cv, 
+    control = control_resamples(save_pred = TRUE)
+  )
+
+
+ oldvsnew_knn %>% get_conf_mat() %>% autoplot(type = "mosaic")
+
+
+
+
+```
+
+*** 
+Here I have trained a classifier to distinguish between the three different categories I divided Bring Me The Horizon's music into. After trying different combinations, I figured out that **energy, valence, duration and all of the timbre components** are the most useful features for computational recognition of this corpus. The **keys** generally confused the classifier the most and **duration** seemed to influence the experimental category the most (significantly fewer songs were classified correctly). As you can see in the mosaic plot, **most of the music is classified in the right category**. It is important to mention that for both old and new 30 songs were used, but there are only eight experimental songs. Considering this, it's quite remarkable that five out of those eight are classified correctly here.
+
+The precision rates are very high for all of the categories, 83% for experimental music, 82% for new music and even 96% for old music. The categories I divided the music into are thus very distinguishable from each other, especially when filtering out the right elements (even without doing this the scores are still relatively high).
+
+
+Conclusion {data-icon="fa-comment-dots"}
 =============================================================================
 
 *Coming soon...*
