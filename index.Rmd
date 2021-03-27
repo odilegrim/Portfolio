@@ -115,6 +115,8 @@ For my corpus I will look at the repertoire of Bring Me The Horizon. Since the r
 
 I definitely think that BMTH's music after 2013 has changed significantly compared to their earlier music and it will be most interesting to dive deeper into their work from that time on. As for specific tracks to look at *Pray for Plagues*, *Chelsea Smile* and *Shadow Moses* from their earlier work and *Drown*, *Mantra* and *Ludens* from their more recent work might be representative tracks, as they were all released as singles and thus viewed as important. Some of their more recent albums include different genres within them, so it might also be useful to examine those more closely and determine what and how big those differences are and whether they are significant.
 
+*add why you're using the popular/not so popular songs*
+
 ### .........................................................................................................................................................................................................................................................................................................................................
 ![](https://www.impericon-mag.com/nl/wp-content/uploads/sites/7/2020/10/bringmethehorizon.jpg)
 
@@ -270,7 +272,7 @@ This plot shows the popularity scores for the songs on all of Bring Me The Horiz
 **Chroma** {.storyboard data-icon="fa-music" data-navmenu="Analysis"}
 =========================================================
 
-### **Chromagram** for the **saddest** song in Bring Me The Horizon's repertoire {data-commentary-width=450}
+### **Chromagrams** for the **happiest and saddest** songs in Bring Me The Horizon's repertoire {data-commentary-width=450}
 
 ```{r}
 library(spotifyr)
@@ -282,7 +284,7 @@ memorial <- get_tidy_audio_analysis("2VseRAuxHRFtlvr5zP1fKE?si=6d86a7afadaa4b93"
   unnest(segments) %>%
   select(start, duration, pitches)
 
-memorial %>%
+memorial_chromagram <- memorial %>%
   mutate(pitches = map(pitches, compmus_normalise, "euclidean")) %>%
   compmus_gather_chroma() %>% 
   ggplot(
@@ -296,11 +298,35 @@ memorial %>%
   geom_tile() +
   labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
   theme_minimal() +
-  scale_fill_viridis_c() +
+  scale_fill_viridis_c(option = "magma") +
   theme(text = element_text(family = "mono")) +
   labs(title = "Memorial")
 
+onebyone <- get_tidy_audio_analysis("6sIbv1oWOuma2qV907MUbk") %>%
+  select(segments) %>%
+  unnest(segments) %>%
+  select(start, duration, pitches)
 
+onebyone_chromagram <- onebyone %>%
+  mutate(pitches = map(pitches, compmus_normalise, "euclidean")) %>%
+  compmus_gather_chroma() %>% 
+  ggplot(
+    aes(
+      x = start + duration / 2,
+      width = duration,
+      y = pitch_class,
+      fill = value
+    )
+  ) +
+  geom_tile() +
+  labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
+  theme_minimal() +
+  scale_fill_viridis_c(option = "magma") +
+  theme(text = element_text(family = "mono")) +
+  labs(title = "1x1 (feat. Nova Twins)")
+
+
+grid.arrange(memorial_chromagram, onebyone_chromagram, nrow = 2)
 
 
 ```
@@ -310,21 +336,19 @@ memorial %>%
 
 *After plotting the energy and valence of Bring Me The Horizon's songs over the years, it gave me some insight into which songs were on the outer ends of the 'emotional spectrum'. Because of this I decided to take a closer look at the happiest and the saddest songs in their repertoire.*
 
-This is a chromagram of the song *Memorial*, which is, according to it's measurements of valence and energy, the **saddest** song in Bring Me The Horizon's entire repertoire. As you can see, the song is **quite repetitive** and has a few layers that really stand out. *Memorial* is an entirely instrumental song with a continuous underlying sound and is used in the album as a transition into the next track. There are clearly audible, and in the chromagram visible, **high and loud 'screeching' noises** in the song and a few notes that are softly and repeatedly being played throughout the song. The texture of the song is very simple and also very clearly repesented in this chromagram.
+*Memorial* is, according to it's measurements of valence and energy, the **saddest** song in Bring Me The Horizon's entire repertoire. As you can see, the song is **quite repetitive** and has a few layers that really stand out. *Memorial* is an entirely instrumental song with a continuous underlying sound and is used in the album as a transition into the next track. There are clearly audible, and in the chromagram visible, **high and loud 'screeching' noises** in the song and a few notes that are softly and repeatedly being played throughout the song. The texture of the song is very simple and also very clearly repesented in this chromagram.
 
-### **Chromagram** for the **happiest** song in Bring Me The Horizon's repertoire {data-commentary-width=450}
+*1x1 (feat. Nova Twins)* is, according to it's measurements of valence and energy, the **happiest** song in Bring Me The Horizon's entire repertoire. As you can see, this song is **all over the place**. The line of C#/Db stands out a little bit, with a higher magnitude overall. The song consists of heavy drums and guitar combined with electronic music and keyboard sounds, all accompanied by the singing voices of either Bring Me The Horizon's frontman Oliver Sykes or the featuring artist the Nova Twins. The only big visible thing that is happening here is at **around 160 seconds**, where the heavy instruments that support the rest of the song go quiet and we hear only a keyboard and a singing voice.
+
+### **Chromagrams** for popular and not so popular songs {data-commentary-width=450}
 
 ```{r}
-library(spotifyr)
-library(compmus)
-library(tidyverse)
-
-onebyone <- get_tidy_audio_analysis("6sIbv1oWOuma2qV907MUbk") %>%
+cyfmh_chroma <- get_tidy_audio_analysis("0WSa1sucoNRcEeULlZVQXj") %>%
   select(segments) %>%
   unnest(segments) %>%
   select(start, duration, pitches)
 
-onebyone %>%
+cyfmh_chromagram <- cyfmh_chroma %>%
   mutate(pitches = map(pitches, compmus_normalise, "euclidean")) %>%
   compmus_gather_chroma() %>% 
   ggplot(
@@ -338,14 +362,252 @@ onebyone %>%
   geom_tile() +
   labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
   theme_minimal() +
-  scale_fill_viridis_c() +
+  scale_fill_viridis_c(guide = "none", option = "magma") +
   theme(text = element_text(family = "mono")) +
-  labs(title = "1x1 (feat. Nova Twins)")
+  labs(title = "Can You Feel My Heart")
+
+
+
+kingslayer_chroma <- get_tidy_audio_analysis("7CAbF0By0Fpnbiu6Xn5ZF7") %>%
+  select(segments) %>%
+  unnest(segments) %>%
+  select(start, duration, pitches)
+
+kingslayer_chromagram <- kingslayer_chroma %>%
+  mutate(pitches = map(pitches, compmus_normalise, "euclidean")) %>%
+  compmus_gather_chroma() %>% 
+  ggplot(
+    aes(
+      x = start + duration / 2,
+      width = duration,
+      y = pitch_class,
+      fill = value
+    )
+  ) +
+  geom_tile() +
+  labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
+  theme_minimal() +
+  scale_fill_viridis_c(guide = "none", option = "magma") +
+  theme(text = element_text(family = "mono")) +
+  labs(title = "Kingslayer")
+
+
+
+liquor_chroma <- get_tidy_audio_analysis("4djz9dpEMMCYwkADOvrCZL") %>%
+  select(segments) %>%
+  unnest(segments) %>%
+  select(start, duration, pitches)
+
+liquor_chromagram <- liquor_chroma %>%
+  mutate(pitches = map(pitches, compmus_normalise, "euclidean")) %>%
+  compmus_gather_chroma() %>% 
+  ggplot(
+    aes(
+      x = start + duration / 2,
+      width = duration,
+      y = pitch_class,
+      fill = value
+    )
+  ) +
+  geom_tile() +
+  labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
+  theme_minimal() +
+  scale_fill_viridis_c(guide = "none", option = "magma") +
+  theme(text = element_text(family = "mono")) +
+  labs(title = "Liquor & Love Lost")
+
+
+
+alotlikevegas_chroma <- get_tidy_audio_analysis("6qa1eyvDHXyaiA6a68kKvr") %>%
+  select(segments) %>%
+  unnest(segments) %>%
+  select(start, duration, pitches)
+
+alotlikevegas_chromagram <- alotlikevegas_chroma %>%
+  mutate(pitches = map(pitches, compmus_normalise, "euclidean")) %>%
+  compmus_gather_chroma() %>% 
+  ggplot(
+    aes(
+      x = start + duration / 2,
+      width = duration,
+      y = pitch_class,
+      fill = value
+    )
+  ) +
+  geom_tile() +
+  labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
+  theme_minimal() +
+  scale_fill_viridis_c(guide = "none", option = "magma") +
+  theme(text = element_text(family = "mono")) +
+  labs(title = "A Lot Like Vegas")
+
+
+grid.arrange(cyfmh_chromagram, kingslayer_chromagram, liquor_chromagram, alotlikevegas_chromagram,
+             nrow = 2, ncol = 2)
 
 ```
 
 ***
-This is a chromagram of the song *1x1 (feat. Nova Twins)*, which is, according to it's measurements of valence and energy, the **happiest** song in Bring Me The Horizon's entire repertoire. As you can see, this song is **all over the place**. The line of C#/Db stands out a little bit, with a higher magnitude overall. The song consists of heavy drums and guitar combined with electronic music and keyboard sounds, all accompanied by the singing voices of either Bring Me The Horizon's frontman Oliver Sykes or the featuring artist the Nova Twins. The only big visible thing that is happening here is at **around 160 seconds**, where the heavy instruments that support the rest of the song go quiet and we hear only a keyboard and a singing voice.
+
+*need to add information*
+
+### **Chromagrams** for BMTH's singles {data-commentary-width=450}
+```{r}
+prayforplagues_chroma <- get_tidy_audio_analysis("0zYxfgyqypkG7rRwFqyisT") %>%
+  select(segments) %>%
+  unnest(segments) %>%
+  select(start, duration, pitches)
+
+prayforplagues_chromagram <- prayforplagues_chroma %>%
+  mutate(pitches = map(pitches, compmus_normalise, "euclidean")) %>%
+  compmus_gather_chroma() %>% 
+  ggplot(
+    aes(
+      x = start + duration / 2,
+      width = duration,
+      y = pitch_class,
+      fill = value
+    )
+  ) +
+  geom_tile() +
+  labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
+  theme_minimal() +
+  scale_fill_viridis_c(guide = "none", option = "magma") +
+  theme(text = element_text(family = "mono")) +
+  labs(title = "Pray For Plagues")
+
+
+
+chelseasmile_chroma <- get_tidy_audio_analysis("2C5jGbR23YLonV7Lton6fV") %>%
+  select(segments) %>%
+  unnest(segments) %>%
+  select(start, duration, pitches)
+
+chelseasmile_chromagram <- chelseasmile_chroma %>%
+  mutate(pitches = map(pitches, compmus_normalise, "euclidean")) %>%
+  compmus_gather_chroma() %>% 
+  ggplot(
+    aes(
+      x = start + duration / 2,
+      width = duration,
+      y = pitch_class,
+      fill = value
+    )
+  ) +
+  geom_tile() +
+  labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
+  theme_minimal() +
+  scale_fill_viridis_c(guide = "none", option = "magma") +
+  theme(text = element_text(family = "mono")) +
+  labs(title = "Chelsea Smile")
+
+
+
+shadowmoses_chroma <- get_tidy_audio_analysis("68osIGtVjM7QWVe6pazLHj") %>%
+  select(segments) %>%
+  unnest(segments) %>%
+  select(start, duration, pitches)
+
+shadowmoses_chromagram <- shadowmoses_chroma %>%
+  mutate(pitches = map(pitches, compmus_normalise, "euclidean")) %>%
+  compmus_gather_chroma() %>% 
+  ggplot(
+    aes(
+      x = start + duration / 2,
+      width = duration,
+      y = pitch_class,
+      fill = value
+    )
+  ) +
+  geom_tile() +
+  labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
+  theme_minimal() +
+  scale_fill_viridis_c(guide = "none", option = "magma") +
+  theme(text = element_text(family = "mono")) +
+  labs(title = "Shadow Moses")
+
+
+
+drown_chroma <- get_tidy_audio_analysis("6o39Ln9118FKTMbM4BvcEy") %>%
+  select(segments) %>%
+  unnest(segments) %>%
+  select(start, duration, pitches)
+
+drown_chromagram <- drown_chroma %>%
+  mutate(pitches = map(pitches, compmus_normalise, "euclidean")) %>%
+  compmus_gather_chroma() %>% 
+  ggplot(
+    aes(
+      x = start + duration / 2,
+      width = duration,
+      y = pitch_class,
+      fill = value
+    )
+  ) +
+  geom_tile() +
+  labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
+  theme_minimal() +
+  scale_fill_viridis_c(guide = "none", option = "magma") +
+  theme(text = element_text(family = "mono")) +
+  labs(title = "Drown")
+
+
+mantra_chroma <- get_tidy_audio_analysis("060RNnzoMay3wKJek1faPc") %>%
+  select(segments) %>%
+  unnest(segments) %>%
+  select(start, duration, pitches)
+
+mantra_chromagram <- mantra_chroma %>%
+  mutate(pitches = map(pitches, compmus_normalise, "euclidean")) %>%
+  compmus_gather_chroma() %>% 
+  ggplot(
+    aes(
+      x = start + duration / 2,
+      width = duration,
+      y = pitch_class,
+      fill = value
+    )
+  ) +
+  geom_tile() +
+  labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
+  theme_minimal() +
+  scale_fill_viridis_c(guide = "none", option = "magma") +
+  theme(text = element_text(family = "mono")) +
+  labs(title = "MANTRA")
+
+
+
+ludens_chroma <- get_tidy_audio_analysis("4xWirulal0kGikFE3WSU75") %>%
+  select(segments) %>%
+  unnest(segments) %>%
+  select(start, duration, pitches)
+
+ludens_chromagram <- ludens_chroma %>%
+  mutate(pitches = map(pitches, compmus_normalise, "euclidean")) %>%
+  compmus_gather_chroma() %>% 
+  ggplot(
+    aes(
+      x = start + duration / 2,
+      width = duration,
+      y = pitch_class,
+      fill = value
+    )
+  ) +
+  geom_tile() +
+  labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
+  theme_minimal() +
+  scale_fill_viridis_c(guide = "none", option = "magma") +
+  theme(text = element_text(family = "mono")) +
+  labs(title = "Ludens")
+
+grid.arrange(prayforplagues_chromagram, chelseasmile_chromagram, shadowmoses_chromagram,
+             drown_chromagram, mantra_chromagram, ludens_chromagram,
+             nrow = 2, ncol = 3)
+```
+
+***
+
+*need to add information*
 
 
 **Timbre** {.storyboard data-icon="fa-music" data-navmenu="Analysis"}
@@ -393,7 +655,7 @@ swoeoplot <- swoeo %>%
   ) +
   geom_tile() +
   labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
-  scale_fill_viridis_c() +                              
+  scale_fill_viridis_c(option = "magma") +                              
   theme_classic() +
   labs(title = "Sleep With One Eye Open") +
   theme(text = element_text(family = "mono"))
@@ -430,7 +692,7 @@ ouchplot <- ouch %>%
   ) +
   geom_tile() +
   labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
-  scale_fill_viridis_c() +                              
+  scale_fill_viridis_c(option = "magma") +                              
   theme_classic() +
   labs(title = "Ouch") +
   theme(text = element_text(family = "mono"))
@@ -479,7 +741,7 @@ cyfmhplot_selfsim <- cyfmh %>%
   ) +
   geom_tile() +
   coord_fixed() +
-  scale_fill_viridis_c(guide = "none") +
+  scale_fill_viridis_c(guide = "none", option = "magma") +
   theme_classic() +
   labs(x = "", y = "") +
   labs(title = "Can You Feel My Heart") +
@@ -517,7 +779,7 @@ kingslayerplot_selfsim <- kingslayer %>%
   ) +
   geom_tile() +
   coord_fixed() +
-  scale_fill_viridis_c(guide = "none") +
+  scale_fill_viridis_c(guide = "none", option = "magma") +
   theme_classic() +
   labs(x = "", y = "") +
   labs(title = "Kingslayer") +
@@ -556,7 +818,7 @@ liquorandlove_selfsim <- liquorandlove %>%
   ) +
   geom_tile() +
   coord_fixed() +
-  scale_fill_viridis_c(guide = "none") +
+  scale_fill_viridis_c(guide = "none", option = "magma") +
   theme_classic() +
   labs(x = "", y = "") +
   labs(title = "Liquor & Love Lost") +
@@ -594,7 +856,7 @@ alotlikevegasplot_selfsim <- alotlikevegas %>%
   ) +
   geom_tile() +
   coord_fixed() +
-  scale_fill_viridis_c(guide = "none") +
+  scale_fill_viridis_c(guide = "none", option = "magma") +
   theme_classic() +
   labs(x = "", y = "") +
   labs(title = "A Lot Like Vegas") +
@@ -704,7 +966,7 @@ cyfmhplot_selfsimp <- cyfmh %>%
   ) +
   geom_tile() +
   coord_fixed() +
-  scale_fill_viridis_c(guide = "none") +
+  scale_fill_viridis_c(guide = "none", option = "magma") +
   theme_classic() +
   labs(x = "", y = "") +
   labs(title = "Can You Feel My Heart") +
@@ -742,7 +1004,7 @@ kingslayerplot_selfsimp <- kingslayer %>%
   ) +
   geom_tile() +
   coord_fixed() +
-  scale_fill_viridis_c(guide = "none") +
+  scale_fill_viridis_c(guide = "none", option = "magma") +
   theme_classic() +
   labs(x = "", y = "") +
   labs(title = "Kingslayer") +
@@ -781,7 +1043,7 @@ liquorandlove_selfsimp <- liquorandlove %>%
   ) +
   geom_tile() +
   coord_fixed() +
-  scale_fill_viridis_c(guide = "none") +
+  scale_fill_viridis_c(guide = "none", option = "magma") +
   theme_classic() +
   labs(x = "", y = "") +
   labs(title = "Liquor & Love Lost") +
@@ -819,7 +1081,7 @@ alotlikevegasplot_selfsimp <- alotlikevegas %>%
   ) +
   geom_tile() +
   coord_fixed() +
-  scale_fill_viridis_c(guide = "none") +
+  scale_fill_viridis_c(guide = "none", option = "magma") +
   theme_classic() +
   labs(x = "", y = "") +
   labs(title = "A Lot Like Vegas") +
@@ -918,7 +1180,7 @@ ludensplot_chord <- ludens %>%
     aes(x = start + duration / 2, width = duration, y = name, fill = d)
   ) +
   geom_tile() +
-  scale_fill_viridis_c(guide = "none") +
+  scale_fill_viridis_c(guide = "none", option = "magma") +
   theme_minimal() +
   labs(x = "Time (s)", y = "", title = "Ludens") +
   theme(text = element_text(family = "mono")) +
@@ -949,7 +1211,7 @@ mantraplot_chord <- mantra %>%
     aes(x = start + duration / 2, width = duration, y = name, fill = d)
   ) +
   geom_tile() +
-  scale_fill_viridis_c(guide = "none") +
+  scale_fill_viridis_c(guide = "none", option = "magma") +
   theme_minimal() +
   labs(x = "Time (s)", y = "", title = "MANTRA") +
   theme(text = element_text(family = "mono")) +
@@ -981,7 +1243,7 @@ drownplot_chord <- drown %>%
     aes(x = start + duration / 2, width = duration, y = name, fill = d)
   ) +
   geom_tile() +
-  scale_fill_viridis_c(guide = "none") +
+  scale_fill_viridis_c(guide = "none", option = "magma") +
   theme_minimal() +
   labs(x = "Time (s)", y = "", title = "Drown") +
   theme(text = element_text(family = "mono")) +
@@ -1012,7 +1274,7 @@ shadowmosesplot_chord <- shadowmoses %>%
     aes(x = start + duration / 2, width = duration, y = name, fill = d)
   ) +
   geom_tile() +
-  scale_fill_viridis_c(guide = "none") +
+  scale_fill_viridis_c(guide = "none", option = "magma") +
   theme_minimal() +
   labs(x = "Time (s)", y = "", title = "Shadow Moses") +
   theme(text = element_text(family = "mono")) +
@@ -1043,7 +1305,7 @@ chelseasmileplot_chord <- chelseasmile %>%
     aes(x = start + duration / 2, width = duration, y = name, fill = d)
   ) +
   geom_tile() +
-  scale_fill_viridis_c(guide = "none") +
+  scale_fill_viridis_c(guide = "none", option = "magma") +
   theme_minimal() +
   labs(x = "Time (s)", y = "", title = "Chelsea Smile") +
   theme(text = element_text(family = "mono")) +
@@ -1074,7 +1336,7 @@ prayforplaguesplot_chord <- prayforplagues %>%
     aes(x = start + duration / 2, width = duration, y = name, fill = d)
   ) +
   geom_tile() +
-  scale_fill_viridis_c(guide = "none") +
+  scale_fill_viridis_c(guide = "none", option = "magma") +
   theme_minimal() +
   labs(x = "Time (s)", y = "", title = "Pray For Plagues") +
   theme(text = element_text(family = "mono")) +
