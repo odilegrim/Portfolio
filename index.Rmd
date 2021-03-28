@@ -759,7 +759,7 @@ grid.arrange(swoeoplot, ouchplot, nrow = 2)
 These are cepstrograms for the songs that lay the closest to the average energy, valence and danceability in BMTH's old music (*Sleep With One Eye Open*) and new music (*Ouch*). Cepstrograms show how the distribution of timbre in the music. As you can see the cepstrograms both have more intensity in the bottom, but *Sleep With One Eye Open* is "squished down" even more than *Ouch*. Both songs have a **focus on the second component (brightness)** and generally go up to c06. You can see that in **the first component (loudness)** *Sleep With One Eye Open* seems to be more uniform with a gradual increase at the beginning, but *Ouch* seems to have more contrasting blocks. *Ouch* seems to have a flatter sound than *Sleep With One Eye Open*, as can be seen from looking at the **third component**.
 
 ### **Cepstrograms** for BMTH's singles: *were the "average" songs representative?* {data-commentary-width=450}
-```{r,  fig.width = 16, fig.height = 14}
+```{r}
 prayforplagues_cep <-
   get_tidy_audio_analysis("0zYxfgyqypkG7rRwFqyisT") %>% # Change URI.
   compmus_align(sections, segments) %>%                     # Change `bars`
@@ -795,8 +795,7 @@ prayforplagues_cep_plot <- prayforplagues_cep %>%
   scale_fill_viridis_c(option = "magma", guide = "none") +                              
   theme_classic() +
   labs(title = "Pray For Plagues") +
-  theme(text = element_text(family = "mono"),
-        title = element_text(size = 17))
+  theme(text = element_text(family = "mono"))
 
  chelseasmile_cep <-
   get_tidy_audio_analysis("2C5jGbR23YLonV7Lton6fV") %>% # Change URI.
@@ -833,8 +832,7 @@ chelseasmile_cep_plot <- chelseasmile_cep %>%
   scale_fill_viridis_c(option = "magma", guide = "none") +                              
   theme_classic() +
   labs(title = "Chelsea Smile") +
-  theme(text = element_text(family = "mono"),
-        title = element_text(size = 17))
+  theme(text = element_text(family = "mono"))
 
 
 
@@ -873,8 +871,7 @@ shadowmoses_cep_plot <- shadowmoses_cep %>%
   scale_fill_viridis_c(option = "magma", guide = "none") +                              
   theme_classic() +
   labs(title = "Shadow Moses") +
-  theme(text = element_text(family = "mono"),
-        title = element_text(size = 17))
+  theme(text = element_text(family = "mono"))
 
  drown_cep <-
   get_tidy_audio_analysis("6o39Ln9118FKTMbM4BvcEy") %>% # Change URI.
@@ -911,9 +908,7 @@ drown_cep_plot <- drown_cep %>%
   scale_fill_viridis_c(option = "magma", guide = "none") +                              
   theme_classic() +
   labs(title = "Drown") +
-  theme(text = element_text(family = "mono"),
-        title = element_text(size = 17))
-
+  theme(text = element_text(family = "mono"))
 
 
 mantra_cep <-
@@ -951,8 +946,7 @@ mantra_cep_plot <- mantra_cep %>%
   scale_fill_viridis_c(option = "magma", guide = "none") +                              
   theme_classic() +
   labs(title = "MANTRA") +
-  theme(text = element_text(family = "mono"),
-        title = element_text(size = 17))
+  theme(text = element_text(family = "mono"))
 
 ludens_cep <-
   get_tidy_audio_analysis("4xWirulal0kGikFE3WSU75") %>% # Change URI.
@@ -988,12 +982,11 @@ ludens_cep_plot <- ludens_cep %>%
   labs(x = "Time (s)", y = NULL, fill = "Magnitude", title = "Ludens") +
   scale_fill_viridis_c(option = "magma", guide = "none") +                              
   theme_classic() +
-  theme(text = element_text(family = "mono"),
-        title = element_text(size = 17))
+  theme(text = element_text(family = "mono"))
 
 
 grid.arrange(prayforplagues_cep_plot, chelseasmile_cep_plot, shadowmoses_cep_plot,
-             drown_cep_plot, mantra_cep_plot, ludens_cep_plot, nrow = 3, ncol = 3)
+             drown_cep_plot, mantra_cep_plot, ludens_cep_plot, nrow = 2, ncol = 3)
 ```
 
 ***
@@ -1599,7 +1592,7 @@ grid.arrange(prayforplaguesplot_chord, chelseasmileplot_chord,
 
 ***
 
-These are **chordograms** for some of the singles of all of Bring Me The Horizons albums in the old and new music categories (the experimental category doesn't have any singles), arranged from oldest to newest (left to right, top to bottom). As you can see, there is a lot going on in all these songs. When listening to the music you can easily follow along in the chordograms. Loud percussion and distorted guitar sounds can make for **bright yellow lines**, like the one around 70 seconds in *Shadow Moses*. Considering this, it is clearly visible that Bring Me The Horizon keep using this a lot in their music over time. It is interesting to see that the screaming in *Pray For Plagues* leads to less intense recognition of chords, but does not necessarily create the bright yellow areas mentioned before. 
+These are **chordograms** for some of the singles out of Bring Me The Horizons repertoire, arranged from oldest to newest (left to right, top to bottom). As you can see, there is a lot going on in all these songs. When listening to the music you can easily follow along in the chordograms. Loud percussion and distorted guitar sounds can make for **bright yellow lines**, like the one around 70 seconds in *Shadow Moses*. Considering this, it is clearly visible that Bring Me The Horizon keep using this a lot in their music over time. It is interesting to see that the screaming in *Pray For Plagues* leads to less intense recognition of chords, but does not necessarily create the bright yellow areas mentioned before. 
 
 When comparing the songs to see what happened to BMTH's music over time, you could say that **their music has become more varied**. The older songs have a simpler pattern than the newer songs, which have a lot of changes in them.
 
@@ -1871,7 +1864,7 @@ The precision rates are very high for all of the categories, 83% for experimenta
 
 ***
 **A plot showing the numbers**
-```{r, fig.width=3, fig.height=3}
+```{r, fig.width=4, fig.height=3}
 oldvsnew_knn %>% get_conf_mat() %>% autoplot(type = "heatmap")
 ```
 
@@ -1984,25 +1977,36 @@ grid.arrange(valence_plot_class_category, energy_plot_class_category, duration_p
 ***
 These plots show three of the most **important elements for the classifier** per category it classifies. The bigger red/pink circles show the median of each value per category. As you can see, **Valence** is the most important element for the "new music", since it is focused much higher in that category. **Energy** doesn't look like it should have too much influence in the "old" and "new" categories, but "experimental" has very different scores. This happens for the **duration** as well.
 
-Conclusion {data-icon="fa-comment-dots" .rows}
+Conclusion {data-icon="fa-comment-dots" data-orientation=rows}
 =============================================================================
 
-Column 1
+Column 1 {.tabset data-width=500}
 ------------------------------------------------------
 
-### What has changed?
+### **What has changed?** 
 Bring Me The Horizon's music has strongly changed over the years, you could easily say that even without making an analysis like this one. First, let's look at what has changed in their new music: overall it seems to have more variation. This is not only visible from the very first plot that relates the energy to the valence, but also in the chromagrams (they show more contrast than for their old music), in the cepstrograms (which show that the timbre is formed by and stronger in more components than in their old music) and the self-similarity matrices (which show more varied patterns). Speaking of patterns, those seem to have become clearer and more structured in BMTH's new music. The timbre features also show that their music has become less bright. Their music has also become louder and faster than it used to be. For a lot of people this would mean that it sounds angrier, but on the contrary, their music has actually become more positive in terms of valence. Their new music still has more songs in minor mode than their old music though, but a minor mode does not always mean the song actually sounds or is sad.
 
-### What has remained the same?
+### **What has remained the same?** 
 One of the aspects that has remained the same is the keys BMTH use in their music, they still don't like D# and prefer to use C, C# and G. Even though I said that their new songs have a more apparent structure, in most of their songs you can still see a lot going on, just like in their old music. Also, the higher valence levels indicate more positive music, but the scores are still mostly below 0.5 out of 1. Their music is more positive, but still not *actually* positive.
 
-Column 2
----------------------------------------------
-
-### On popularity
+### **What about the popularity?** {data-height=400}
 It is very clear that Bring Me The Horizon's new music scores a lot higher on popularity, with *Sempiternal* being a kind of "transitional" album. It still fits into the "old", but has a lot of features from the "new". Does the higher popularity of their newer work mean people prefer louder, higher tempo, more positive music that has more structure? Maybe, but maybe it is also because BMTH's old music is just "old", and society requires new stimuli at the speed of light nowadays. Or most people prefer alternative-/pop-/electronic-rock over metalcore, who knows. This would certainly be an area that is interesting for further research, perhaps related to something like *cultural musicology*.
 
-### The experimental music
+### **What about the experimental music?** 
 As we have seen basically everywhere in the analysis, the experimental music that Bring Me The Horizon has made is just *different* from the rest. It doesn't fit into any category of music they have made before (or after, so far) and that really shows. The popularity drops down with the release of *Music to listen to~*, when their albums right before and after that score almost 50% higher on average. I didn't want to focus my research on this experimental aspect, so apart from general features to look at we'll just have to accept it's difference for now.
+
+
+
+Column 2 
+------------------------------------------
+
+### *BMTH in their "old music" era* 
+![](http://images2.fanpop.com/images/photos/6100000/BMTH-bring-me-the-horizon-6160641-400-293.jpg)
+
+### *BMTH in their "new music" era* 
+![](https://cdn.wegow.com/media/artists/bring-me-the-horizon/bring-me-the-horizon-1587383288.8071752.jpg)
+
+
+
 
 
