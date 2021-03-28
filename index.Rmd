@@ -111,7 +111,9 @@ cache = TRUE
 ===============================================================
 
 ### **What my analysis is about**
-For this portfolio I will take the [repertoire of Bring Me The Horizon](https://open.spotify.com/artist/1Ffb6ejR6Fe5IamqA5oRUF) as my corpus. Since the release of their first four albums, which can, according to Google, all be classified as "metalcore", their music has progressed more towards alternative-/pop-/electronic-rock and they even released an [EP with experimental and electronic music](https://open.spotify.com/album/6yC6aLzX5knhWpKDidwxft). Having been in their fanbase since around 2013, when [*Sempiternal*](https://open.spotify.com/album/1tbhr4UJMpYgBjWhbhO3hW) was released, I myself experienced the changes in their music. As always, there are fans that argue that only the "old" music is good and the "new" music just isn't good. My question is, what exactly has changed about their music, and are there any aspects which have remained similar to their early music? It could also be interesting to see whether there are any patterns in the popularity with regards to their "old" and "new" music.
+For this portfolio I will take the [repertoire of Bring Me The Horizon](https://open.spotify.com/artist/1Ffb6ejR6Fe5IamqA5oRUF) as my corpus. Since the release of their first four albums, which can, according to Google, all be classified as "metalcore", their music has progressed more towards alternative-/pop-/electronic-rock and they even released an [EP with experimental and electronic music](https://open.spotify.com/album/6yC6aLzX5knhWpKDidwxft). Having been in their fanbase since around 2013, when [*Sempiternal*](https://open.spotify.com/album/1tbhr4UJMpYgBjWhbhO3hW) was released, I myself experienced the changes in their music. As always, there are fans who argue that only the "old" music is good and the "new" music just isn't. My question is, what exactly has changed about their music, and are there any aspects which have remained similar to their early music? It could also be interesting to see whether there are any patterns in the popularity with regard to their "old" and "new" music. 
+
+I have split Bring Me The Horizon's music into three different categories, **"Old music"**, their first four albums, **"New music"**, their three most recent releases, with exception of their experimental music from *Music to listen to~*, which is the third **"Experimental music"** category. This album isn't exactly representative of either their "new" or "old" music style, so I made it a separate category (hence "Experimental").
 
 I definitely think that BMTH's music after 2013 has changed significantly compared to their earlier music and it will be most interesting to compare music from before and after that time. Specific interesting tracks I will look at would be their singles *Pray for Plagues*, *Chelsea Smile* and *Shadow Moses* from their earlier work and *Drown*, *Mantra* and *Ludens* from their more recent work, as singles are usually representative for the overall style of the album they belong to. Another factor I will use to pick some specific songs is popularity. As you will be able to see in the *analysis* part of the portfolio, BMTH's old music scores significantly lower on popularity, so it would be interesting to dig a little deeper into those songs and see if there could be a reason for this. Overall, I will focus more on the "old" and "new" music, but I will include the "experimental" music in some more general parts of the analysis.
 
@@ -190,8 +192,6 @@ ggplotly(differentstyles)
 
 ***
 
-For this plot I have split Bring Me The Horizon's music into three different categories, **"Old music"**, their first four albums, **"New music"**, their three most recent releases, with exception of their experimental music from *Music to listen to~*, which is the third **"Experimental music"** category. This album isn't exactly representative of either their "new" or "old" music style, so I made it a separate category (hence "Experimental").
-
 It is easily visible that BMTH's new music is much **more varied** than their old music. Considering that high energy + low valence = angry music, and high energy + high valence = happy music, we could conclude that their music has overall become **happier**. The experimental music has very low valence values, like BMTH's old music, and is also more angry and negative. Each category seems to have outliers that fall into the 'sad music' area, they are labeled in the plot.
   
 With the highest **danceability (indicated by size)** score being 0.6 out of a possible maximum of 1, most of their music isn't very danceable, but their newer music generally scores higher. The **speechiness** seems to be higher with higher valence scores, but overall the music doesn't seem very speechy. Looking at all their work together, the music seems very energetic and seems to have progressed from negative and angry towards a more diverse and positive style (although the valence still lies mostly below 0.5), with almost a kind of "dip" back towards negativity in their experimental album. 
@@ -257,7 +257,7 @@ ggplot(oldvsnew_releasedate, aes(track.album.name, track.popularity,
 
 ***
 
-This plot shows the popularity scores for the songs on all of Bring Me The Horizon's albums, they are in order of their release date from oldest to most recent. The bigger transparent red/pink circles show the **mean popularity** for each album. It is easy to see that their older music is the least popular of all and *That's The Spirit* and *POST HUMAN: SURVIVAL HORROR* are their most popular albums. Considering the fact that their music style really started changing on *Sempiternal*, it is not weird to see that the popularity shoots upwards from that album on. Of course, the experimental album *Music to listen to~* creates a big dip in popularity, since it is completely different from what the band usually produces and is not widely liked by fans.
+This plot shows the popularity scores for the songs on all of Bring Me The Horizon's albums, they are in order of their release date from oldest to most recent. The bigger transparent red/pink circles show the **median for popularity** for each album. It is easy to see that their older music is the least popular of all and *That's The Spirit* and *POST HUMAN: SURVIVAL HORROR* are their most popular albums. Considering the fact that their music style really started changing on *Sempiternal*, it is not weird to see that the popularity shoots upwards from that album on. Of course, the experimental album *Music to listen to~* creates a big dip in popularity, since it is completely different from what the band usually produces and is not widely liked by fans.
   
 **Chroma** {.storyboard data-icon="fa-music" data-navmenu="Analysis"}
 =========================================================
@@ -373,7 +373,7 @@ grid.arrange(cyfmh_chromagram, kingslayer_chromagram, liquor_chromagram, alotlik
 
 In these chromagrams we can see two very popular songs in the top row (*Can You Feel My Heart* and *Kingslayer (feat. BABYMETAL)*) and two quite unpopular songs in the bottom row (*Liquor & Love Lost* and *A Lot Like Vegas*). As discussed in the introduction, the popular songs are from BMTH's newer music and the unpopular ones from their older music. Although *Can You Feel My Heart* is from *Sempiternal* and is still categorized as "old" music (looking at the popularity plot, it's clearly visible where the popular songs are as outliers).
 
-The main difference we can see between te popular and not popular songs, is that the popular ones have more distinct areas where a certain pitch is absent, as can be seen by the **black areas**. The high magnitude areas are also a lot clearer and more distinct than in the unpopular songs. *CYFMH* has a clear focus on E and C and *Kinglsayer* is focused on C, C#/Db and B. The unpopular songs basically have **more of everything**, you would be able to make out some areas of focus, but the chromagrams have **a lot less contrast** in them.
+The main difference we can see between the popular and unpopular songs, is that the popular ones have more distinct areas where a certain pitch is absent, as can be seen by the **black areas**. The high magnitude areas are also a lot clearer and more distinct than in the unpopular songs. *CYFMH* has a clear focus on E and C and *Kinglsayer* is focused on C, C#/Db and B. The unpopular songs basically have **more of everything**, you would be able to make out some areas of focus, but the chromagrams have **a lot less contrast** in them.
 
 
 ### **Chromagrams** for the **happiest and saddest** songs in Bring Me The Horizon's repertoire {data-commentary-width=450}
@@ -438,9 +438,9 @@ grid.arrange(memorial_chromagram, onebyone_chromagram, nrow = 2)
 
 ***
 
-*After [plotting the energy and valence](https://odilegrim.github.io/Portfolio/#general) of Bring Me The Horizon's songs over the years, it gave me some insight into which songs were on the outer ends of the 'emotional spectrum'. Because of this I decided to take a closer look at the happiest and the saddest songs in their repertoire.*
+*After plotting the energy and valence of Bring Me The Horizon's songs over the years, it gave me some insight into which songs were on the outer ends of the 'emotional spectrum'. Because of this I decided to take a closer look at the happiest and the saddest songs in their repertoire.*
 
-*Memorial* is, according to it's measurements of valence and energy, the **saddest** song in Bring Me The Horizon's entire repertoire. As you can see, the song is **quite repetitive** and has a few layers that really stand out. *Memorial* is an entirely instrumental song with a continuous underlying sound and is used in the album as a transition into the next track. There are clearly audible, and in the chromagram visible, **high and loud 'screeching' noises** in the song and a few notes that are softly and repeatedly being played throughout the song. The texture of the song is very simple and also very clearly repesented in this chromagram. Interestingly, despite the fact that we saw that popular songs have a more distinct pattern, this song is not very popular. A good reason for this could be that is instrumental and belongs to the "old" music.
+*Memorial* is, according to its measurements of valence and energy, the **saddest** song in Bring Me The Horizon's entire repertoire. As you can see, the song is **quite repetitive** and has a few layers that really stand out. *Memorial* is an entirely instrumental song with a continuous underlying sound and is used in the album as a transition into the next track. There are clearly audible, and in the chromagram visible, **high and loud 'screeching' noises** in the song and a few notes that are played softly and repeatedly throughout the song. The texture of the song is very simple and also very clearly repesented in this chromagram. Interestingly, despite the fact that we saw that popular songs have a more distinct pattern, this song is not very popular. A good reason for this could be that is instrumental and belongs to the "old" music.
 
 *1x1 (feat. Nova Twins)* is, according to it's measurements of valence and energy, the **happiest** song in Bring Me The Horizon's entire repertoire. As you can see, this song is **all over the place**. The line of C#/Db stands out a little bit, with a higher magnitude overall. The song consists of heavy drums and guitar combined with electronic music and keyboard sounds, all accompanied by the singing voices of either Bring Me The Horizon's frontman Oliver Sykes or the featuring artist the Nova Twins. The only big visible thing that is happening here is at **around 160 seconds**, where the heavy instruments that support the rest of the song go quiet and we hear only a keyboard and a singing voice, which gives a bright block in the G#/Ab line.
 
@@ -756,10 +756,10 @@ grid.arrange(swoeoplot, ouchplot, nrow = 2)
 
 ***
 
-These are cepstrograms for the songs that lay the closest to the average energy, valence and danceability in BMTH's old music (*Sleep With One Eye Open*) and new music (*Ouch*). Cepstrograms show how the distribution of timbre in the music. As you can see the cepstrograms both have more intensity in the bottom, but *Sleep With One Eye Open* is "squished down" even more than *Ouch*. Both songs have a **focus on the second component (brightness)** and generally go up to c06. You can see that in **the first component (loudness)** *Sleep With One Eye Open* seems to be more uniform with a gradual increase at the beginning, but ouch seems to have more contrasting blocks. *Ouch* seems to have a flatter sound than *Sleep With One Eye Open*, as can be seen from looking at the **third component**.
+These are cepstrograms for the songs that lay the closest to the average energy, valence and danceability in BMTH's old music (*Sleep With One Eye Open*) and new music (*Ouch*). Cepstrograms show how the distribution of timbre in the music. As you can see the cepstrograms both have more intensity in the bottom, but *Sleep With One Eye Open* is "squished down" even more than *Ouch*. Both songs have a **focus on the second component (brightness)** and generally go up to c06. You can see that in **the first component (loudness)** *Sleep With One Eye Open* seems to be more uniform with a gradual increase at the beginning, but *Ouch* seems to have more contrasting blocks. *Ouch* seems to have a flatter sound than *Sleep With One Eye Open*, as can be seen from looking at the **third component**.
 
 ### **Cepstrograms** for BMTH's singles: *were the "average" songs representative?* {data-commentary-width=450}
-```{r}
+```{r,  fig.width = 16, fig.height = 14}
 prayforplagues_cep <-
   get_tidy_audio_analysis("0zYxfgyqypkG7rRwFqyisT") %>% # Change URI.
   compmus_align(sections, segments) %>%                     # Change `bars`
@@ -795,7 +795,8 @@ prayforplagues_cep_plot <- prayforplagues_cep %>%
   scale_fill_viridis_c(option = "magma", guide = "none") +                              
   theme_classic() +
   labs(title = "Pray For Plagues") +
-  theme(text = element_text(family = "mono"))
+  theme(text = element_text(family = "mono"),
+        title = element_text(size = 17))
 
  chelseasmile_cep <-
   get_tidy_audio_analysis("2C5jGbR23YLonV7Lton6fV") %>% # Change URI.
@@ -832,7 +833,8 @@ chelseasmile_cep_plot <- chelseasmile_cep %>%
   scale_fill_viridis_c(option = "magma", guide = "none") +                              
   theme_classic() +
   labs(title = "Chelsea Smile") +
-  theme(text = element_text(family = "mono"))
+  theme(text = element_text(family = "mono"),
+        title = element_text(size = 17))
 
 
 
@@ -871,7 +873,8 @@ shadowmoses_cep_plot <- shadowmoses_cep %>%
   scale_fill_viridis_c(option = "magma", guide = "none") +                              
   theme_classic() +
   labs(title = "Shadow Moses") +
-  theme(text = element_text(family = "mono"))
+  theme(text = element_text(family = "mono"),
+        title = element_text(size = 17))
 
  drown_cep <-
   get_tidy_audio_analysis("6o39Ln9118FKTMbM4BvcEy") %>% # Change URI.
@@ -908,7 +911,8 @@ drown_cep_plot <- drown_cep %>%
   scale_fill_viridis_c(option = "magma", guide = "none") +                              
   theme_classic() +
   labs(title = "Drown") +
-  theme(text = element_text(family = "mono"))
+  theme(text = element_text(family = "mono"),
+        title = element_text(size = 17))
 
 
 
@@ -947,7 +951,8 @@ mantra_cep_plot <- mantra_cep %>%
   scale_fill_viridis_c(option = "magma", guide = "none") +                              
   theme_classic() +
   labs(title = "MANTRA") +
-  theme(text = element_text(family = "mono"))
+  theme(text = element_text(family = "mono"),
+        title = element_text(size = 17))
 
 ludens_cep <-
   get_tidy_audio_analysis("4xWirulal0kGikFE3WSU75") %>% # Change URI.
@@ -983,7 +988,8 @@ ludens_cep_plot <- ludens_cep %>%
   labs(x = "Time (s)", y = NULL, fill = "Magnitude", title = "Ludens") +
   scale_fill_viridis_c(option = "magma", guide = "none") +                              
   theme_classic() +
-  theme(text = element_text(family = "mono"))
+  theme(text = element_text(family = "mono"),
+        title = element_text(size = 17))
 
 
 grid.arrange(prayforplagues_cep_plot, chelseasmile_cep_plot, shadowmoses_cep_plot,
@@ -998,7 +1004,7 @@ These are cepstrograms for some of BMTH's singles, with the top row belonging to
 =========================================================
 
 
-### **Timbre and pitch based self-similarity matrices** for popular and not so popular songs {data-commentary-width=400}
+### **Timbre- and pitch-based self-similarity matrices** for popular and not so popular songs {data-commentary-width=400}
 ```{r, fig.width = 16, fig.height = 8}
 cyfmh <-
   get_tidy_audio_analysis("0WSa1sucoNRcEeULlZVQXj") %>% # Change URI.
@@ -1037,7 +1043,7 @@ cyfmhplot_selfsim <- cyfmh %>%
   labs(x = "", y = "") +
   labs(title = "Can You Feel My Heart (T)") +
   theme(text = element_text(family = "mono"),
-        title = element_text(size = 10))
+        title = element_text(size = 12))
 
 kingslayer <-
   get_tidy_audio_analysis("7CAbF0By0Fpnbiu6Xn5ZF7") %>% # Change URI.
@@ -1076,7 +1082,7 @@ kingslayerplot_selfsim <- kingslayer %>%
   labs(x = "", y = "") +
   labs(title = "Kingslayer (T)") +
   theme(text = element_text(family = "mono"),
-        title = element_text(size = 10))
+        title = element_text(size = 12))
 
 
 liquorandlove <-
@@ -1116,7 +1122,7 @@ liquorandlove_selfsim <- liquorandlove %>%
   labs(x = "", y = "") +
   labs(title = "Liquor & Love Lost (T)") +
   theme(text = element_text(family = "mono"),
-        title = element_text(size = 10))
+        title = element_text(size = 12))
 
 alotlikevegas <-
   get_tidy_audio_analysis("6qa1eyvDHXyaiA6a68kKvr") %>% # Change URI.
@@ -1155,7 +1161,7 @@ alotlikevegasplot_selfsim <- alotlikevegas %>%
   labs(x = "", y = "") +
   labs(title = "A Lot Like Vegas (T)") +
   theme(text = element_text(family = "mono"),
-        title = element_text(size = 10))
+        title = element_text(size = 12))
 
 
 
@@ -1198,7 +1204,7 @@ cyfmhplot_selfsimp <- cyfmh %>%
   labs(x = "", y = "") +
   labs(title = "Can You Feel My Heart (P)") +
   theme(text = element_text(family = "mono"),
-        title = element_text(size = 10))
+        title = element_text(size = 12))
 
 kingslayer <-
   get_tidy_audio_analysis("7CAbF0By0Fpnbiu6Xn5ZF7") %>% # Change URI.
@@ -1237,7 +1243,7 @@ kingslayerplot_selfsimp <- kingslayer %>%
   labs(x = "", y = "") +
   labs(title = "Kingslayer (P)") +
   theme(text = element_text(family = "mono"),
-        title = element_text(size = 10))
+        title = element_text(size = 12))
 
 
 liquorandlove <-
@@ -1277,7 +1283,7 @@ liquorandlove_selfsimp <- liquorandlove %>%
   labs(x = "", y = "") +
   labs(title = "Liquor & Love Lost (P)") +
   theme(text = element_text(family = "mono"),
-        title = element_text(size = 10))
+        title = element_text(size = 12))
 
 alotlikevegas <-
   get_tidy_audio_analysis("6qa1eyvDHXyaiA6a68kKvr") %>% # Change URI.
@@ -1316,7 +1322,7 @@ alotlikevegasplot_selfsimp <- alotlikevegas %>%
   labs(x = "", y = "") +
   labs(title = "A Lot Like Vegas (P)") +
   theme(text = element_text(family = "mono"),
-        title = element_text(size = 10))
+        title = element_text(size = 12))
 
 
 grid.arrange(cyfmhplot_selfsim, cyfmhplot_selfsimp, kingslayerplot_selfsim, kingslayerplot_selfsimp, 
@@ -1327,7 +1333,7 @@ grid.arrange(cyfmhplot_selfsim, cyfmhplot_selfsimp, kingslayerplot_selfsim, king
 
 ***
 
-These are **timbre and pitch based self-similarity matrices** for some of Bring Me The Horizons most popular songs (*Can You Feel My Heart* and *Kingslayer (feat. BABYMETAL)*) and some of their least popular songs (*Liquor & Love Lost* and *A Lot Like Vegas*). **Timbre wise**, all but *Liquor & Love Lost* seem to have a quite strong pattern. Te **checkerboard pattern** indicates **homogeniety** in the overall structure of the song and shows the pattern of the different sections like verse and chorus. The checkerboard patterns on the popular songs seem to be divided into smaller sections than the pattern on *A Lot Like Vegas*. The greater variety in the popular songs could be a reason for their popularity. The **bright criss-crossing lines** indicate moments in the music that are different from everything else, *Liquor & Love Lost* does not seem to have a lot of those moments, which could be a reason the song is less well-liked. On the other hand, *A Lot Like Vegas* does seem to have quite a bit of those moments, so it is probably a combination with other factors. **Pitch wise** we can see some similarities with the timbre SSMs. The **checkerboard pattern** still seems to be divided into smaller sections for the popular music against the unpopular music. The one moment that is different from the rest in the timbre based SSM for *Liquor & Love Lost* doesn't show up in it's pitch based SSM at all.
+These are **timbre- and pitch-based self-similarity matrices** for some of Bring Me The Horizons most popular songs (*Can You Feel My Heart* and *Kingslayer (feat. BABYMETAL)*) and some of their least popular songs (*Liquor & Love Lost* and *A Lot Like Vegas*). **Timbre-wise**, all but *Liquor & Love Lost* seem to have a quite strong pattern. Te **checkerboard pattern** indicates **homogeniety** in the overall structure of the song and shows the pattern of the different sections like verse and chorus. The checkerboard patterns on the popular songs seem to be divided into smaller sections than the pattern on *A Lot Like Vegas*. The greater variety in the popular songs could be a reason for their popularity. The **bright criss-crossing lines** indicate moments in the music that are different from everything else, *Liquor & Love Lost* does not seem to have a lot of those moments, which could be a reason the song is less well-liked. On the other hand, *A Lot Like Vegas* does seem to have quite a bit of those moments, so it is probably a combination with other factors. **Pitch-wise** we can see some similarities with the timbre SSMs. The **checkerboard pattern** still seems to be divided into smaller sections for the popular music against the unpopular music. The one moment that is different from the rest in the timbre-based SSM for *Liquor & Love Lost* doesn't show up in its pitch-based SSM at all.
 
 
 
@@ -1593,7 +1599,7 @@ grid.arrange(prayforplaguesplot_chord, chelseasmileplot_chord,
 
 ***
 
-These are **chordograms** for some of the singles of all of Bring Me The Horizons albums in the old and new music categories (the experimental catagory doesn't have any singles), arranged from oldest to newest (left to right, top to bottom). As you can see, there is a lot going on in all these songs. When listening to the music you can easily follow along in the chordograms. Loud percussion and distorted guitar sounds can make for **bright yellow lines**, like the one around 70 seconds in *Shadow Moses*. Considering this, it is clearly visible that Bring Me The Horizon keep using this a lot in their music over time. It is interesting to see that the screaming in *Pray For Plagues* leads to less intense recognition of chords, but does not necessarily create the bright yellow areas mentioned before. 
+These are **chordograms** for some of the singles of all of Bring Me The Horizons albums in the old and new music categories (the experimental category doesn't have any singles), arranged from oldest to newest (left to right, top to bottom). As you can see, there is a lot going on in all these songs. When listening to the music you can easily follow along in the chordograms. Loud percussion and distorted guitar sounds can make for **bright yellow lines**, like the one around 70 seconds in *Shadow Moses*. Considering this, it is clearly visible that Bring Me The Horizon keep using this a lot in their music over time. It is interesting to see that the screaming in *Pray For Plagues* leads to less intense recognition of chords, but does not necessarily create the bright yellow areas mentioned before. 
 
 When comparing the songs to see what happened to BMTH's music over time, you could say that **their music has become more varied**. The older songs have a simpler pattern than the newer songs, which have a lot of changes in them.
 
@@ -1610,10 +1616,10 @@ oldvsnew_order$category <- factor(oldvsnew_order$category,
 
 
 ggplot(oldvsnew_order, aes(factor(key), fill = factor(mode))) +
-  geom_bar(position = "stack", alpha = 0.9) +
+  geom_bar(position = "stack") +
   theme_linedraw() +
   scale_fill_manual(labels = c("Minor", "Major"),
-                    values = c("#ea6241", "#336bff")) +
+                    values = c("#380087", "#ffc96b")) +
   scale_x_discrete(breaks = c("0", "1", "2", "3", "4", "5", 
                               "6", "7", "8", "9", "10", "11"),
                    labels = c("C","C#", "D", "D#",
@@ -1632,7 +1638,7 @@ ggplot(oldvsnew_order, aes(factor(key), fill = factor(mode))) +
 
 ***
 
-This graph shows the keys and modes for the different categories I have divided Bring Me The Horizon's music into. It is remarkable, that - even though their new music can generally be classified as happier and more positive, as we've seen earlier - we see more minor modes in that category than in their old, sadder and angrier music. Their least favourite key seems to be D# (in either mode really) and most of their songs seem to be in C, C# and G for both their old and new music. Their old music also focuses a bit more on G# major. For their experimental music, however, they focus on a key that is not very common in the rest of their repertoire, which is D. Mostly D major, while most of that music is in the minor mode. The only thing that can not be derived from Spotify's information, is whether they use sharps (#) or flats (♭).
+This graph shows the keys and modes for the different categories I have divided Bring Me The Horizon's music into. It is remarkable, that - even though their new music can generally be classified as happier and more positive, as we've seen earlier - we see **more minor modes** in that category than in their old, sadder and angrier music. Their **least favourite key seems to be D#** (in either mode really) and **most of their songs seem to be in C, C# and G** for both their old and new music. Their old music also focuses a bit more on G# major. For their experimental music, however, they **focus on a key that is not very common in the rest of their repertoire**, which is D. Mostly D major, while most of that music is in the minor mode. The only thing that can not be derived from Spotify's information, is whether they use sharps (#) or flats (♭). These are enharmonic equivalents, which means that C# and Db practically sound the same, but it could actually make a difference for the musician.
 
 **Tempo and Loudness** {.storyboard data-icon="fa-music" data-navmenu="Analysis"}
 =========================================================
@@ -1772,7 +1778,7 @@ ggplot(oldvsnew, aes(track.album.name, loudness, color = category)) +
 
 ***
 
-This plot shows the loudness per track for all of BMTH's albums, from oldest-newest from left to right, coloured by category (I have scaled the Y-axis to remove one song from *There is a Hel...*, as it had a loudness of -22 and made the rest of the plot hard to read). The larger red/pink circles show the **median** of the loudness per album.  As we have seen in the **timbre analysis**, the "new music" is slightly stronger in the timbre component that indicates loudness and that is visible in this plot. This plot also shows, as a lot of other parts of the analysis have, that the "experimental music" has very different scores from the rest of BMTH's music.
+This plot shows the loudness per track for all of BMTH's albums, from oldest-newest from left to right, coloured by category (I have scaled the Y-axis to remove one song from *There is a Hell...*, as it had a loudness of -22 and made the rest of the plot hard to read). The larger red/pink circles show the **median** of the loudness per album.  As we have seen in the **timbre analysis**, the "new music" is slightly stronger in the timbre component that indicates loudness and that is visible in this plot. This plot also shows, as a lot of other parts of the analysis have, that the "experimental music" has very different scores from the rest of BMTH's music.
 
 **Classification** {.storyboard data-icon="fa-music" data-navmenu="Analysis"}
 =========================================================
@@ -1853,11 +1859,10 @@ oldvsnew_knn <-
 
 
  oldvsnew_knn %>% get_conf_mat() %>% autoplot(type = "mosaic")
-
-
-
-
+ 
 ```
+
+
 
 *** 
 Here I have trained a classifier to distinguish between the three different categories I divided Bring Me The Horizon's music into. After trying different combinations, I figured out that **energy, valence, duration and all of the timbre components** are the most useful features for computational recognition of this corpus. The **keys** generally confused the classifier the most and **duration** seemed to influence the experimental category the most (significantly fewer songs were classified correctly). As you can see in the mosaic plot, **most of the music is classified in the right category**. It is important to mention that for both old and new 30 songs were used, but there are only eight experimental songs. Considering this, it's quite remarkable that five out of those eight are classified correctly here.
@@ -1865,29 +1870,139 @@ Here I have trained a classifier to distinguish between the three different cate
 The precision rates are very high for all of the categories, 83% for experimental music, 82% for new music and even 96% for old music. The categories I divided the music into are thus very distinguishable from each other, especially when filtering out the right elements (even without doing this the scores are still relatively high).
 
 ***
-*add energy/valence/duration plots for clarification?*
+**A plot showing the numbers**
+```{r, fig.width=3, fig.height=3}
+oldvsnew_knn %>% get_conf_mat() %>% autoplot(type = "heatmap")
+```
 
-Conclusion {data-icon="fa-comment-dots"}
+
+
+### Comparing mportant features for the classifier: **Engergy, valence** and **duration**
+```{r, fig.width=10, fig.height=5}
+old <- get_playlist_audio_features("", "6oeRMX8XZ8IS7MCDb6Z1BG")
+new <- get_playlist_audio_features("", "4k98rVhcCw54dhLaUMiyLK")
+experimental <- get_playlist_audio_features("", "1EIpRI9TozVUiehlxAmmHq")
+
+oldvsnew <-
+  bind_rows(
+    old %>% mutate(category = "Old music"),
+    new %>% mutate(category = "New music"),
+    experimental %>% mutate(category = "Experimental")
+  )
+
+energy_plot_class_category <- ggplot(oldvsnew, aes(category, energy, color = category)) +
+  geom_point(size = 3, alpha = 0.6) +
+  theme_linedraw() +
+  scale_color_brewer(palette = "Dark2",  name = "", labels = c("Experimental", "New", "Old")) +
+  scale_x_discrete(breaks = c("Old music", "New music", "Experimental"),
+                   labels = c("Old music", "New music", "Experimental"),
+                   limits = c("Old music", "New music", "Experimental")
+  ) +
+  theme(text = element_text(family = "mono")) +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1, size = 8)) +
+  theme(axis.title.x = element_blank()) +
+  labs(y = "Energy", color = "Category", title = "Energy") +
+  stat_summary(
+    geom = "point",
+    fun = "median",
+    col = "darkred",
+    size = 7,
+    shape = 21,
+    fill = "pink",
+    alpha = 0.5
+  ) +
+  stat_summary(aes(group = 1), 
+               fun = median, 
+               geom = "line", 
+               colour = "darkred",
+               alpha = 0.3) +
+  theme(legend.position = "top")
+
+valence_plot_class_category <- ggplot(oldvsnew, aes(category, valence, color = category)) +
+  geom_point(size = 3, alpha = 0.6) +
+  theme_linedraw() +
+  scale_color_brewer(palette = "Dark2",  name = "", labels = c("Experimental", "New", "Old")) +
+  scale_x_discrete(breaks = c("Old music", "New music", "Experimental"),
+                   labels = c("Old music", "New music", "Experimental"),
+                   limits = c("Old music", "New music", "Experimental")
+  ) +
+  theme(text = element_text(family = "mono")) +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1, size = 8)) +
+  theme(axis.title.x = element_blank()) +
+  labs(y = "Valence", color = "Category", title = "Valence") +
+  stat_summary(
+    geom = "point",
+    fun = "median",
+    col = "darkred",
+    size = 7,
+    shape = 21,
+    fill = "pink",
+    alpha = 0.5
+  ) +
+  stat_summary(aes(group = 1), 
+               fun = median, 
+               geom = "line", 
+               colour = "darkred",
+               alpha = 0.3) +
+  theme(legend.position = "top")
+
+
+duration_plot_class_category <- ggplot(oldvsnew, aes(category, track.duration_ms, color = category)) +
+  geom_point(size = 3, alpha = 0.6) +
+  theme_linedraw() +
+  scale_color_brewer(palette = "Dark2", name = "", labels = c("Experimental", "New", "Old")) +
+  scale_x_discrete(breaks = c("Old music", "New music", "Experimental"),
+                   labels = c("Old music", "New music", "Experimental"),
+                   limits = c("Old music", "New music", "Experimental")
+  ) +
+  theme(text = element_text(family = "mono")) +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1, size = 8)) +
+  theme(axis.title.x = element_blank()) +
+  labs(y = "Duration (ms)", color = "Category", title = "Duration") +
+  stat_summary(
+    geom = "point",
+    fun = "median",
+    col = "darkred",
+    size = 7,
+    shape = 21,
+    fill = "pink",
+    alpha = 0.5
+  ) +
+  stat_summary(aes(group = 1), 
+               fun = median, 
+               geom = "line", 
+               colour = "darkred",
+               alpha = 0.3) +
+  theme(legend.position = "top") +
+  ylim(0, 750000) 
+
+grid.arrange(valence_plot_class_category, energy_plot_class_category, duration_plot_class_category,
+             nrow = 1, ncol = 3)
+
+```
+
+***
+These plots show three of the most **important elements for the classifier** per category it classifies. The bigger red/pink circles show the median of each value per category. As you can see, **Valence** is the most important element for the "new music", since it is focused much higher in that category. **Energy** doesn't look like it should have too much influence in the "old" and "new" categories, but "experimental" has very different scores. This happens for the **duration** as well.
+
+Conclusion {data-icon="fa-comment-dots" .rows}
 =============================================================================
-***under construction***
 
-**New music** 
+Column 1
+------------------------------------------------------
 
-* seems to have more variation
+### What has changed?
+Bring Me The Horizon's music has strongly changed over the years, you could easily say that even without making an analysis like this one. First, let's look at what has changed in their new music: overall it seems to have more variation. This is not only visible from the very first plot that relates the energy to the valence, but also in the chromagrams (they show more contrast than for their old music), in the cepstrograms (which show that the timbre is formed by and stronger in more components than in their old music) and the self-similarity matrices (which show more varied patterns). Speaking of patterns, those seem to have become clearer and more structured in BMTH's new music. The timbre features also show that their music has become less bright. Their music has also become louder and faster than it used to be. For a lot of people this would mean that it sounds angrier, but on the contrary, their music has actually become more positive in terms of valence. Their new music still has more songs in minor mode than their old music though, but a minor mode does not always mean the song actually sounds or is sad.
 
-* is "happier" (higher valence)
+### What has remained the same?
+One of the aspects that has remained the same is the keys BMTH use in their music, they still don't like D# and prefer to use C, C# and G. Even though I said that their new songs have a more apparent structure, in most of their songs you can still see a lot going on, just like in their old music. Also, the higher valence levels indicate more positive music, but the scores are still mostly below 0.5 out of 1. Their music is more positive, but still not *actually* positive.
 
-* seems to be less bright
+Column 2
+---------------------------------------------
 
-* seems to be louder 
+### On popularity
+It is very clear that Bring Me The Horizon's new music scores a lot higher on popularity, with *Sempiternal* being a kind of "transitional" album. It still fits into the "old", but has a lot of features from the "new". Does the higher popularity of their newer work mean people prefer louder, higher tempo, more positive music that has more structure? Maybe, but maybe it is also because BMTH's old music is just "old", and society requires new stimuli at the speed of light nowadays. Or most people prefer alternative-/pop-/electronic-rock over metalcore, who knows. This would certainly be an area that is interesting for further research, perhaps related to something like *cultural musicology*.
 
-**old music**
-
-* Sempiternal is a "transitioning" album: still fits into the old, but has a lot of new features.
-
-**Experimental music**
-
-* is defnitely different from everything else
-
+### The experimental music
+As we have seen basically everywhere in the analysis, the experimental music that Bring Me The Horizon has made is just *different* from the rest. It doesn't fit into any category of music they have made before (or after, so far) and that really shows. The popularity drops down with the release of *Music to listen to~*, when their albums right before and after that score almost 50% higher on average. I didn't want to focus my research on this experimental aspect, so apart from general features to look at we'll just have to accept it's difference for now.
 
 
