@@ -1778,7 +1778,7 @@ This plot shows the loudness per track for all of BMTH's albums, from oldest-new
 **Classification** {.storyboard data-icon="fa-music" data-navmenu="Analysis"}
 =========================================================
 
-### **Classification** {data-commentary-width=450}
+### Training a **classifier** {data-commentary-width=450}
 
 ```{r}
 old <- get_playlist_audio_features("", "6oeRMX8XZ8IS7MCDb6Z1BG")
@@ -1862,7 +1862,7 @@ oldvsnew_knn <-
 *** 
 Here I have trained a classifier to distinguish between the three different categories I divided Bring Me The Horizon's music into. After trying different combinations, I figured out that **energy, valence, duration and all of the timbre components** are the most useful features for computational recognition of this corpus. The **keys** generally confused the classifier the most and **duration** seemed to influence the experimental category the most (significantly fewer songs were classified correctly when not using it). As you can see in the mosaic plot, **most of the music is classified in the right category**. It is important to mention that for both old and new 30 songs were used, but there are only eight experimental songs. Considering this, it's quite remarkable that most of these are classified correctly here. The rest of the experimental songs are classified as "new music", which is fair, because it *is new music*.
 
-The precision rates are very high for all of the categories, as you can see in the table on the bottom. The categories I divided the music into are thus very distinguishable from each other, especially when filtering out the right elements (even without doing this the scores are still relatively high).
+The precision rates are very high for all of the categories, ranging from roughly 80-95%. The categories I divided the music into are thus very distinguishable from each other, especially when filtering out the right elements (even without doing this the scores are still relatively high).
 
 ***
 **A plot showing the numbers**
@@ -1870,11 +1870,6 @@ The precision rates are very high for all of the categories, as you can see in t
 oldvsnew_knn %>% get_conf_mat() %>% autoplot(type = "heatmap")
 ```
 
-***
-**The precision and recall rates**
-```{r, fig.width=4, fig.height=3}
-oldvsnew_knn %>% get_pr()
-```
 
 
 
